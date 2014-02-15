@@ -79,3 +79,8 @@ App::down(function()
 */
 
 require app_path().'/filters.php';
+
+
+/*** MIO ***/
+
+App::setLocale(Session::get('my.locale', Config::get('app.locale')));

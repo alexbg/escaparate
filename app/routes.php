@@ -46,4 +46,6 @@ Route::any('/changeEmail','HomeController@changeEmail');
 
 Route::get('/deleteUser','HomeController@deleteUser');
 
+Route::any('/changeLanguage','HomeController@changeLanguage');
+
 //Route::post('phone/store/{id}','PhoneController@store');

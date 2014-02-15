@@ -203,24 +203,35 @@ class HomeController extends BaseController {
         
         public function changePassword(){
             
+                $message = 'Hay algun error';
             
                 if(Request::ajax()){
                     
                     //$inputs = json_decode(Request::all());
-                    
+
                     $pass = Validator::make(Request::all(),User::$rules);
-                    
+
                     if(!$pass->fails()){
                         $user = User::find(Auth::user()->id);
                         if(Hash::check(Input::get('oldPassword'),$user->password)){
-                            
+
                             $user->password = hash::make(Input::get('newPassword'));
-                            
+
                             if($user->save()){
-                               
+
                                return array('save'=>true,'message'=>'La contraseña a sido cambiada');
                             }
-                        }  
+                            else
+                            {
+                                $message = 'La password no puede ser modificada';
+                            }
+                        }
+                        else{
+                            $message = 'Tu antiguo password no es correcto';
+                        } 
+                    }
+                    else{
+                        $message = 'Alguno de los datos es incorrecto';
                     }
                     
                     return array(
@@ -229,63 +240,15 @@ class HomeController extends BaseController {
                             array(
                                 'error'=>$pass->messages()->toArray()
                             ),
-                        'message'=>'Hay algun dato mal'
+                        'message'=>$message
                         );
-                    
                 }
-            
-            
-                if(Request::all()){
-                    // INTENTAR CAMBIARLO CON EL VALIDADOR
-                    // NO CONSIGO QUE ME VALIDE 
-                    //if(Validator::make(Request::all(),User::$rulesChangePassword)){
-                        
-                        /*if(Input::get('newPassword') == Input::get('repeatPassword')){
-                            $user = User::find(Auth::user()->id);
-                           
-                            $user->password = Hash::make(Input::get('newPassword'));
-                            if($user->save()){
-                                return Redirect::to('profile')->with('message','La contraseña ha dido cambiada');
-                            }
-                            else{
-                                return Redirect::to('changePassword')->with('message','No a poddo guardar');
-                            }
-                        }
-                        else{
-                            return Redirect::to('changePassword')->with('message','nuevas contraseñas no coinciden');
-                        }*/
-                    //}
-                    /*$pass = Validator::make(Request::all(),User::$rules);
-                    
-                    if(!$pass->fails()){
-                        $user = User::find(Auth::user()->id);
-                        if(Hash::check(Input::get('oldPassword'),$user->password)){
-                            
-                            $user->password = hash::make(Input::get('newPassword'));
-                            
-                            if($user->save()){
-                                return Redirect::to('profile')->with('message','La contraseña ha dido cambiada');
-                            }
-                        }  
-                    }
-                    
-                    return Redirect::to('changePassword')->
-                            with('message','No se ha podido cambiar la contraseña')->
-                            withErrors($pass);*/
-                    
-                   
-                }
-                
-                
-                
-            
-            
-            //return View::make('profile/changePassword');
-            
         }
         
         
         public function changeEmail(){
+            
+            $message = 'Hay algun error';
             
             if(Request::ajax()){
                 
@@ -316,6 +279,12 @@ class HomeController extends BaseController {
                             'data'=>Input::get('email')
                         );
                     }
+                    else{
+                        $message = 'El Correo elecronico no puede ser modificado';
+                    }
+                }
+                else{
+                    $message = 'Alguno de los datos es incorrecto';
                 }
                 
                 
@@ -328,32 +297,20 @@ class HomeController extends BaseController {
                         'message'=>'Hay algun dato mal'
                         );
             }
+        }
+        
+        public function changeLanguage(){
             
-            /*if(Request::all()){
-                // INTENTAR CAMBIARLO CON EL VALIDADOR
-                // NO CONSIGO QUE ME VALIDE 
-                // MISMO PROBLEMA QUE changePassword
-                // RECUERDA Validator::make(Request::all(),User::$rulesChangeEmail) SIEMPRE DEVULVE TRUE VALIE O NO VALIDE
-                $pass = Validator::make(Request::all(),User::$rules);
-                
-                if(!$pass->fails()){
-                    
-                    $user = User::find(Auth::user()->id);
-                    $user->email = Input::get('email');
-                    if($user->save()){
-                        return Redirect::to('profile')->with('message','El correo ha sido cambiado');
-                    }
-                }
-                else{
-                    
-                    return Redirect::to('changeEmail')->withErrors($pass);
-                    
-                }
-                
-                
-                     
-            }*/
-            //return View::make('profile/changeEmail');
+            //(Input::get('language'));
+            Session::put('my.locale', Input::get('language'));
+            
+            return array(
+                        'save'=>true,
+                        'message'=>'El idioma a sido cambiado',
+                        'data'=>Input::get('language'),
+                        'type'=>'language'
+                        );
+            
         }
         
         public function deleteUser(){

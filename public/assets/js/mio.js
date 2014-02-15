@@ -110,6 +110,10 @@ $('form').submit(function(event){
                     // modifico la informacion del email del perfil
                     $('#email').html(data.data)
                 }
+                
+                if(data.type = 'language'){
+                    $('#language').html(data.data)
+                }
                 // Muestro una alerta durante 3 segundos(delay(3000))
                 // y tarda en mostrarla y en eliminarla 0,500 segundos
                 message($('#message'),data.message,'success');
@@ -123,6 +127,10 @@ $('form').submit(function(event){
                 // Los errores tienen que ser un array(diccionario) de clave=>valor
                 $('.error').each(function(key,value){
                     // cada div mostrara su mensaje correspondiente, para eso tiene que tener
+                    // Como algun error anterior ha podido ser eliminado
+                    // pongo cada error primero vacio.
+                    $(value).html('');
+                    // Despues pongo el error nuevo si lo tiene
                     // una etiqueta name, que coincida con el nombre del error
                     $(value).html(data.data.error[$(value).attr('name')]);
                     //alert(data.data.error);
@@ -131,11 +139,13 @@ $('form').submit(function(event){
                 // TERMINA MODIFICACION
             }
                     },
-        error:function(){
+        error:function(jqXHR,status,errorThrown){
             $('.ajax-gif').hide();
-            /*$('#message').html('Hay un error en la conexion');
-            $('.alert').show(500).delay(3000).hide(500);*/
-            message($('#message'),data.message,'dange');
+            switch(status){
+                case 'error':
+                    message($('#message'),'No se puede acceder al servidor','dange');
+                    break;
+            }
         }
     })
 });
