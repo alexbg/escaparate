@@ -6,16 +6,24 @@
 
 
 <!-- Muestro informacion sobre el usuario como: email, idioma, etc -->
-<div class='col-xs-6 col-sm-6 col-md-6'>
+<div class='col-xs-12 col-sm-6 col-md-6'>
     <h1>Perfil de {{ $user->name }}</h1>
     <h2>Datos:</h2>
     <strong>Correo Electronico: </strong><span id='email'>{{ Auth::user()->email }}</span></br>
-    <strong>Idioma: </strong><span id='language'>{{ Config::get('app.locale') }}</span>
-
+    <strong>Idioma: </strong><span id='language'>{{ Config::get('app.locale') }}</span></br>
+    
+    <strong>Fecha de nacimiento: </strong>
+        <span id='date' class='edit-span' data-type-edit='date'>
+            {{ Auth::user()->date }}
+        </span>
+        {{ HTML::link('#','edit',array('class'=>'edit-button', 'data-open'=>'false')) }}</br>
+        
+    <strong>Telefono: </strong><span id='phone'>{{ Auth::user()->phone_number }}</span></br>
+    <strong>Direccion: </strong><span id='address'>{{ Auth::user()->address }}</span></br>
 </div>
 
 <!-- Contiene la parte de las acciones que pueden hacer el usuario -->
-<div class='col-xs-6 col-sm-6 col-md-6'>
+<div class='col-xs-12 col-sm-6 col-md-6'>
 <!-- Inicio los paneles como acordeon que contienen los formularios -->
     <div class="panel-group" id="accordion">
         <!-- Primer panel, consite en mostrar el formulario para el cambio de

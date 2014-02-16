@@ -4,9 +4,9 @@
     <h2>Los ultimos moviles</h2>    
 </div>
 
-<ul>
+
     @foreach($phones as $value)
-    <div class='col-xs-4 col-sm-4 col-md-4'>
+    <div class='col-xs-12 col-sm-4 col-md-3'>
         <div class="thumbnail">
             <div class='caption'>
                 
@@ -23,5 +23,7 @@
         </div>
     </div>
     @endforeach
-</ul>
+    <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+        {{ $phones->links() }}
+    </div>
 @stop

@@ -14,14 +14,14 @@ $('.category').click(function(event){
     // Guardo el elemento al que se ha echo click
     var element = $(this);
     // Muestro una imagen en movimiento
-    $('#ajax-gif').show();
+    $('.ajax-gif').show();
     // Inicio la peticion ajax
     $.ajax('showPhones',{
         type:'GET',
         data:{id:$(this).attr('id')},
         dataType:'html',
         success:function(data){
-            $('#ajax-gif').hide();
+            $('.ajax-gif').hide();
             // meto la informacion obtenida en html dentro del div con el id phones
             $('#phones').html(data);
             // quito el active del item que lo tenia antes
@@ -113,9 +113,18 @@ $('form').submit(function(event){
                            if(data.type != 'email'){
                                // quito cualquier string que tenga el input
                                $(value).val('');
-                           } 
+                           }
                        }
                     });
+                    // Recorro los errors, para quitar los mensajes de errores generados
+                    // anteriormente
+                    $('.error').each(function(key,value){
+                        // cada div mostrara su mensaje correspondiente, para eso tiene que tener
+                        // Como algun error anterior ha podido ser eliminado
+                        // pongo cada error primero vacio.
+                        $(value).html('');
+                    })
+                    
                     // si type es de tipo email entonces entra en el if
                     if(data.type == 'email'){
                         // modifico la informacion del email del perfil
@@ -218,19 +227,67 @@ function message(element,message,type){
     element.html(message);
     switch(type){
         case 'dange':
-            $('.ajax').attr('class','alert alert-danger ajax');
+            $('.ajax').attr('class','alert alert-danger ajax affix');
             break;
         case 'success':
-            $('.ajax').attr('class','alert alert-success ajax');
+            $('.ajax').attr('class','alert alert-success ajax affix');
             break;
         case 'warning':
-            $('.ajax').attr('class','alert alert-warning ajax');
+            $('.ajax').attr('class','alert alert-warning ajax affix');
             break;
         case 'info':
-            $('.ajax').attr('class','alert alert-info ajax');
+            $('.ajax').attr('class','alert alert-info ajax affix');
             break;
     };
     $('.ajax').show(500).delay(3000).hide(500);
 };
 
 
+/*** CALENDARIO FECHA PARA EL FORMULARIO ***/
+
+$(function() {
+    $( "#datepicker" ).datepicker("option", "showAnim", 'fadeIn'); 
+});
+
+
+/*** EDIT INPUT ***/
+/* TODOS ESTOS DATOS ESTAN EN EL LINK 
+ * url: sera el href del boton que lanzara el edit(edit-button)
+ * name: sera el name del input
+ * type(data-type-edit): sera el tipo de formato a validar
+ * valor: sera el valor que tiene el campo en ese momento
+ * open(data-open): indicara si esta activo o no con true o false 
+ * ESTE ES EL FORMATO QUE TENDRA QUE TENER(laravel)
+ *  <strong>Fecha de nacimiento: </strong>
+        <span id='date' class='edit-span'>{{ Auth::user()->date }}</span>
+        {{ HTML::link('#','edit',array('class'=>'edit-button')) }}
+ */
+$('.edit-button').click(function(event){
+    /*Genero el formulario si no esta ya generado*/
+    if(!$(this).data('open')){
+        var url = $(this).attr('href');
+        var name = $(this).attr('name');
+        var valor =  $(this).prev().text();
+        var formulario = $("<form action='"+url+"' method='PUT' role='form' class='form-inline'>\n\
+                        <div class='form-group'>\n\
+                      <input type='text' class='form-control' value='"+valor+"'/>\n\
+                      <div class='error' name='"+name+"'></div>\n\
+                       </div>\n\
+                        </form>");
+        $(this).prev().html(formulario);
+        $(this).data('open','true');
+    }
+    else{
+        // si ya esta generado, vuelvo a como estaba antes
+        var valor = $(this).prev().find('input').val()
+        $(this).prev().html($(this).prev().find('input').val());
+        $(this).data('open','false');
+    }
+    
+    
+})
+
+/** Validara los datos editatos con EDIT INPUT **/
+function validate(){
+    
+}

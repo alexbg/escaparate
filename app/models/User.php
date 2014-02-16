@@ -12,7 +12,12 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
             'password' => 'sometimes|required|min:6',
             'oldPassword' => 'sometimes|required|min:6',
             'newPassword' => 'sometimes|same:repeatPassword|required|min:6',
-            'repeatPassword' => 'sometimes|same:repeatPassword|required|min:6'
+            'repeatPassword' => 'sometimes|same:repeatPassword|required|min:6',
+            'address'=>'sometimes',
+            'day'=>'sometimes|required',
+            'month'=>'sometimes|required',
+            'year'=>'sometimes|required',
+            'phone'=>'sometimes',
         );
         
         /*public static $rulesChangePassword = array(

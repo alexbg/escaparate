@@ -37,7 +37,8 @@ class HomeController extends BaseController {
          */
         public function index(){
             // Obtengo los telefonos ordenados de forma ascendente
-            $phones = Phone::orderBy('created_at','ASC')->get();
+            $phones = Phone::orderBy('created_at','ASC')
+                    ->paginate(2);
             // Genero la vista index que es la principal
             $view = View::make('index');
             // Añado una vista shopWindow si hay algun telefono añadido 
@@ -117,8 +118,9 @@ class HomeController extends BaseController {
                 $message;
                 // instancio el modelo User
                 $user = new User();
-                // Comprueb que los datos son validos con el Validatos::make
+                // Comprueba que los datos son validos con el Validatos::make
                 // pasandole los datos de request::all con las reglas generadas en el modelo de User
+                
                 $pass = Validator::make(Request::all(),$user::$rules);
                 // Si ha fallado la validacion, lo redirecciona al formulario con los errores
                 if(!$pass->fails()){
@@ -126,9 +128,15 @@ class HomeController extends BaseController {
                     $user->name = Input::get('username');
                     $user->password = Hash::make(Input::get('password'));
                     $user->email = Input::get('email');
+                    $user->date = Input::get('day').'/'.Input::get('month').'/'.Input::get('year');
+                    $user->address = Input::get('address');
+                    $user->phone_number = Input::get('phone');
                     if($user->save()){
+                        // informo al usuario de que esta siendo redirigido al login
                         $message = 'Usuario guardado. Redirigiendo al login...';
+                        // mostrare el mensaje de que ha sido logueado
                         Session::flash('message','Usuario registrado, ya puede loguearse');
+                        // devuelvo la informacion necesaria al ajax que esta esperando
                         return array(
                             'save'=>true,
                             'message'=>$message,
@@ -209,11 +217,12 @@ class HomeController extends BaseController {
                 // EN caso contrario, devolvera los telefonos cuya marca 
                 // a la que pertenecen tienen el id enviado
                 if(!Input::get('id')){
-                    $phones = Phone::all();
+                    $phones = Phone::orderBy('created_at','DESC')->paginate(1);
                     
                 }
                 else{
                     // Obtengo los telefonos que tengan cuya id_brand es la id enviada
+                    
                     $phones = Brand::find(Input::get('id'))->phones;
                     
                 }
@@ -230,7 +239,7 @@ class HomeController extends BaseController {
             
             // Obtengo todos los telefonos y todas las marcas
             // Esta informacion sera obtenida SOLO cuando no sea una peticion ajax
-            $phones = Phone::all();
+            $phones = Phone::OrderAsc()->paginate(1);
             $brands = Brand::all();
             
             // devuelvo las vistas. Esta vista SOLO sera pasada cuando no sea una peticion ajax
@@ -333,7 +342,7 @@ class HomeController extends BaseController {
                             array(
                                 'error'=>$pass->messages()->toArray()
                             ),
-                        'message'=>'Hay algun dato mal'
+                        'message'=>$message,
                         );
             }
         }

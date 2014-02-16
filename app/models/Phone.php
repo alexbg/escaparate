@@ -39,6 +39,23 @@ class Phone extends Eloquent {
         return $this->hasMany('Comment','id_phone')->orderBy('created_at','DESC');
         
     }
+    /**
+     * SCOPE
+     */
+    // Obtiene los telefonos en orden descendente
+    public function scopeOrderAsc($query){
+        
+        return $query->orderBy('created_at','DESC');
+        
+    }
+    
+    /**
+     * SCOPE
+     */
+       // Busca los telefonos segun la marca y los ordena en orden descendente
+    public function scopeFindPhonesOrderAsc($query,$id){
+        return $query->where('id_brand','=',$id)->orderBy('created_at','DESC');
+    }
     
     /**
      * The database table used by the model.
