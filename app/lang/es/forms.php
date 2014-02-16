@@ -17,6 +17,15 @@ return array(
         'title'=>'Formulario cambiar idioma',
         'language'=>'Idioma',
         'button'=>'Cambiar idioma',
-    )
+    ),
+    'delete'=>array(
+        'title'=>'Eliminar su cuenta',
+        'warning'=>'Tenga cuidado!!!',
+        'button'=>'Eliminar',
+        'modal'=>array(
+            'title'=>'¿Estas seguro de querer eliminar su cuenta?',
+            'body'=>'Si elimina su cuenta, todos sus datos seran borradso excepto sus comentarios'
+        )
+    ),
 );
 ?>

@@ -26,6 +26,6 @@ return array(
             'title'=>'Do you wish delete your account?',
             'body'=>'If you delete your account all your data will be removed except your comments'
         )
-    )
+    ),
 );
 ?>

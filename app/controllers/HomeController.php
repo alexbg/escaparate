@@ -20,7 +20,7 @@ class HomeController extends BaseController {
      */
        public function __construct() {
            
-            //$this->beforeFilter('csrf',array('on'=>'login'));
+            $this->beforeFilter('csrf',array('on'=>'login'));
         
        }
 
@@ -53,13 +53,40 @@ class HomeController extends BaseController {
          * Permite loguearse al usuario
          * @return type
          */
-        public function login()
-        {
+        public function login(){
             // Si hay una peticion en el request comprobara los datos de la peticion
             // si odo esta correcto, logueara al usuario
-            if(Request::all())
-            {
+            
+            if(Request::ajax()){
                 
+                //return View::make('ajax/menu/login');
+                $message = 'El usuario o la contraseña son incorrectos';
+                // Comprueba que los datos sean correctos en la base de datos de User y lo loguea si ha salido correcto
+                // Cuando termina todo, redirecciona al usuario con un mensaje
+                if(!Auth::attempt(array('email'=>Input::get('email'),'password'=>Input::get('password')),true)){
+                    // Si hay algo mal, envia un mensaje al usuario mediante with('message'
+                    //return Redirect::to('login')->with('message','El usuario o la contraseña son incorrectos');
+                    return array(
+                        'save'=>false,
+                        'message'=>$message,
+                        );
+                }
+                else{
+                    // Si todo ha salido bien y el usuario esta logueado, envia un mensaje al usuario con with('message'
+                    //return Redirect::to('/')->with('message','has sido logueado');
+                    $message = 'Redirigiendo a la pagina principal...';
+                    Session::flash('message','has sido logueado');
+                     return array(
+                        'save'=>true,
+                        'message'=>$message,
+                        'redirect'=>url('/')
+                        );
+                    
+                }
+            }
+            
+           
+            /*if(Request::all()){  
                 // Comprueba que los datos sean correctos en la base de datos de User y lo loguea si ha salido correcto
                 // Cuando termina todo, redirecciona al usuario con un mensaje
                 if(!Auth::attempt(array('email'=>Input::get('email'),'password'=>Input::get('password')),true)){
@@ -70,8 +97,9 @@ class HomeController extends BaseController {
                     // Si todo ha salido bien y el usuario esta logueado, envia un mensaje al usuario con with('message'
                     return Redirect::to('/')->with('message','has sido logueado');
                 }
+            }*/
                 
-            }
+            
             // devuelve la primera vez el formulario de login
             return View::make('forms/login'); 
                
@@ -85,37 +113,45 @@ class HomeController extends BaseController {
         {
             
             if(Request::ajax()){
-                // EL ERROR ESTA EN EL VALIDATOR CON LA INFORMACION
-                /*$pass = Validator::make(Input::get('username'),$user::$rules);
-                if($pass->fails()){
-                    return Response::json('ha fallado');
-                }*/
-                return Response::json(Request::get('username'));
-            }
-            // Si hay una peticion en el request comprobara los datos de la peticion
-            if(Request::all()){
+                // Si hay una peticion en el request comprobara los datos de la peticion
+                $message;
                 // instancio el modelo User
                 $user = new User();
                 // Comprueb que los datos son validos con el Validatos::make
                 // pasandole los datos de request::all con las reglas generadas en el modelo de User
                 $pass = Validator::make(Request::all(),$user::$rules);
                 // Si ha fallado la validacion, lo redirecciona al formulario con los errores
-                if($pass->fails()){
-                    return Redirect::to('register')->withErrors($pass);
-                }
-                // Si todo sale bien, inserta el usuario en la base de datos
-                // y lo redirige al formulario de login con un mensaje
-                else{
+                if(!$pass->fails()){
+                    //return Redirect::to('register')->withErrors($pass);
                     $user->name = Input::get('username');
                     $user->password = Hash::make(Input::get('password'));
                     $user->email = Input::get('email');
                     if($user->save()){
-                       return Redirect::to('login')->with('message','El usuario ha sido registrado');
+                        $message = 'Usuario guardado. Redirigiendo al login...';
+                        Session::flash('message','Usuario registrado, ya puede loguearse');
+                        return array(
+                            'save'=>true,
+                            'message'=>$message,
+                            'redirect'=>url('/login')
+                        );
                     }
-                    //return Redirect::to('registro')->with('message', 'Todo correcto');
+                    else{
+                        $message = 'Ahora no puede registrarse, intentelo mas tarde';
+                    }
                 }
-              
+                // Si todo sale bien, inserta el usuario en la base de datos
+                // y lo redirige al formulario de login con un mensaje
+                $message = 'Los datos introducidos no son validos';
+                return array(
+                        'save'=>false,
+                        'message'=>$message,
+                        'data'=>array(
+                                'error'=>$pass->messages()->toArray()
+                        ),
+                );
             }
+            
+            
             // devuelve el formulario de login
             return View::make('forms/register');
             
@@ -128,7 +164,7 @@ class HomeController extends BaseController {
         public function logout()
         {
             Auth::logout();
-            return Redirect::to('/');
+            return Redirect::to('/')->with('message','Has sido deslogueado');
         }
         
         /**
@@ -174,15 +210,18 @@ class HomeController extends BaseController {
                 // a la que pertenecen tienen el id enviado
                 if(!Input::get('id')){
                     $phones = Phone::all();
+                    
                 }
                 else{
                     // Obtengo los telefonos que tengan cuya id_brand es la id enviada
                     $phones = Brand::find(Input::get('id'))->phones;
+                    
                 }
                 
                 // Genero la vista a enviar para responder a la peticion ajax.
                 // Es un html
-                $view = View::make('ajax/phones/show')->with('phones',$phones);
+                $view = View::make('ajax/phones/show')
+                        ->with('phones',$phones);
                 
                 // devuelvo la vista
                 return $view;
@@ -304,12 +343,14 @@ class HomeController extends BaseController {
             //(Input::get('language'));
             Session::put('my.locale', Input::get('language'));
             
-            return array(
+            return Redirect::to('profile')->with('message','El idioma a sido cambiado');
+            
+            /*return array(
                         'save'=>true,
                         'message'=>'El idioma a sido cambiado',
                         'data'=>Input::get('language'),
                         'type'=>'language'
-                        );
+                        );*/
             
         }
         

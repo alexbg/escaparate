@@ -8,9 +8,9 @@
             {{ HTML::image($value->image ,$value->id,array('data-src'=>$value->image)) }}
             </a>
             <div class="caption">
-                
+
               <p>Descripcion</p>
-             
+
             </div>
         </div>
     </div>

@@ -4,6 +4,7 @@
         <!-- Cargo los scripts de jquery y boostrap -->
         {{ HTML::script('http://code.jquery.com/jquery-1.10.2.min.js') }}
         {{ HTML::style('assets/css/bootstrap.min.css', array('media' => 'screen')) }}
+        {{ HTML::style('assets/css/mio.css') }}
         {{ HTML::script('assets/js/bootstrap.min.js') }}
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,7 +31,7 @@
                             <!-- Menu no logueado -->
                             <li>{{ HTML::link('login','Login') }}</li>
                             <li>{{ HTML::link('register','Registrate') }}</li>
-                            <li>{{ HTML::link('showPhones','Moviles') }}</li>
+                            <li>{{ HTML::link('showPhones','Moviles', array('class'=>'menu-link')) }}</li>
                             @else
                             <!-- Menu logueado -->
                             <li>{{ HTML::link('profile','Perfil') }}</li>
@@ -62,6 +63,10 @@
                                 <li>{{ HTML::link('logout','logout '.'('.Auth::user()->name.')') }}</li>
                             </ul>
                         @endif
+                        <!-- gif que se muestrea cuando se esta obteniendo la informacion mediante ajax -->
+                        <ul class='nav navbar-nav navbar-left'>
+                                <li class='ajax-gif'>{{ HTML::image('assets/img/ajax-loader.gif','Cargando', array('class'=>'img-responsive img-rounded')) }}</li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -76,13 +81,14 @@
 
             @endif
         <!-- Este es el mensaje que modifico con javascript -->  
-             <div class="alert alert-success">
+             <div class="alert alert-success ajax">
                     <!--<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>-->
                   <div id='message'>{{ Session::get('message') }}</div>
              </div>
+ 
         <!-- Esta es la parte dinamica de la web -->
             <div class='row'>
-                <div class='col-xs-12 col-sm-12 col-md-12'>
+                <div class='col-xs-12 col-sm-12 col-md-12' id='content'>
                     
                     <!--@if(isset($table))
                         {{ $table }}

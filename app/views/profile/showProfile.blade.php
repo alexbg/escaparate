@@ -1,6 +1,11 @@
 @extends('index')
 
 @section('content')
+<!-- TRADUCCIENDO CON trans() -->
+<!-- FALTA TERMINAR TRADUCCIR -->
+
+
+<!-- Muestro informacion sobre el usuario como: email, idioma, etc -->
 <div class='col-xs-6 col-sm-6 col-md-6'>
     <h1>Perfil de {{ $user->name }}</h1>
     <h2>Datos:</h2>
@@ -9,19 +14,17 @@
 
 </div>
 
+<!-- Contiene la parte de las acciones que pueden hacer el usuario -->
 <div class='col-xs-6 col-sm-6 col-md-6'>
-    
-    <!--<ul class="nav nav-pills nav-stacked">
-      <li>{{ HTML::link('changePassword','Cambiar contraseña') }}</li>
-      <li>{{ HTML::link('comment','Todos los comentarios') }}</li>
-      <li>{{ HTML::link('changeEmail','Cambiar correo electronico') }}</li>
-      <li>{{ HTML::link('deleteUser','Darse de baja') }}</li>
-    </ul>-->
-
+<!-- Inicio los paneles como acordeon que contienen los formularios -->
     <div class="panel-group" id="accordion">
+        <!-- Primer panel, consite en mostrar el formulario para el cambio de
+         contraseña, toda la informacion se actualiza con ajax, excepto el eliminar el usuario
+        y el cambiar de idioma-->
         <div class="panel">
           <div class="panel-heading">
             <h4 class="panel-title">
+                <!-- Titulo del panel que tambien activa el acordeon password -->
               <a data-toggle="collapse" data-parent="#accordion" href="#password">
                 {{ trans('forms.password.button') }}
               </a>
@@ -29,7 +32,8 @@
           </div>
           <div id="password" class="panel-collapse collapse">
             <div class="panel-body">
-                <div class='ajax-gif'>{{ HTML::image('assets/img/ajax-loader.gif','Cargando') }}</div>
+               
+                <!-- Inicio del formulario, este formulario esta ligado al mio.js, es decir funciona con ajax -->
                 <h1>{{ trans('forms.password.title') }}</h1>
                 {{ Form::open(array('url' => 'changePassword','role'=> 'form', 'name'=>'password')) }}
                 <!-- -->
@@ -37,21 +41,19 @@
                 <div class="form-group">
                    {{ Form::label('oldPassword', trans('forms.password.oldPassword')) }}
                    {{ Form::password('oldPassword',array('class'=>'form-control')) }}
-                   {{ $errors->first('oldPassword') }}
+                   <!-- Todas las class=error se encargan de mostrar los mensajes de los datos erroneos -->
                    <div class='error' name='oldPassword'></div>
                 </div>
 
                 <div class="form-group">
                    {{ Form::label('newPassword', trans('forms.password.newPassword')) }}
                    {{ Form::password('newPassword',array('class'=>'form-control')) }}
-                   {{ $errors->first('newPassword') }}
                    <div class='error' name='newPassword'></div>
                 </div>
 
                 <div class="form-group">
                    {{ Form::label('repeatPassword', trans('forms.password.repeatPassword')) }}
                    {{ Form::Password('repeatPassword',array('class'=>'form-control')) }}
-                   {{ $errors->first('repeatPassword') }}
                    <div class='error' name='repeatPassword'></div>
                 </div>
 
@@ -72,15 +74,14 @@
           </div>
           <div id="change-email" class="panel-collapse collapse">
             <div class="panel-body">
-                <div class='ajax-gif'>{{ HTML::image('assets/img/ajax-loader.gif','Cargando') }}</div>
+               
                 <h1>{{ trans('forms.email.title') }}</h1>
                 {{ Form::open(array('url' => 'changeEmail','role'=> 'form')) }}
-                <!-- -->
+                <!--  -->
 
                 <div class="form-group">
                    {{ Form::label('email', trans('forms.email.changeEmail')) }}
                    {{ Form::email('email',Auth::user()->email,array('class'=>'form-control')) }}
-                   {{ $errors->first('email') }}
                    <div class='error' name='email'></div>
                 </div>
 
@@ -100,7 +101,7 @@
           </div>
           <div id="delete" class="panel-collapse collapse">
             <div class="panel-body">
-                <div class='ajax-gif'>{{ HTML::image('assets/img/ajax-loader.gif','Cargando') }}</div>
+                
                 <p class='text-warning'>{{ trans('forms.delete.warning') }}</p>
                 {{ HTML::link(
                     'deleteUser',
@@ -125,9 +126,9 @@
           </div>
           <div id="change-language" class="panel-collapse collapse">
             <div class="panel-body">
-                <div class='ajax-gif'>{{ HTML::image('assets/img/ajax-loader.gif','Cargando') }}</div>
+                
                 <h1>{{ trans('forms.language.title') }}</h1>
-                {{ Form::open(array('url' => 'changeLanguage','role'=> 'form')) }}
+                {{ Form::open(array('url' => 'changeLanguage','role'=> 'form', 'data-stop')) }}
                 <!-- -->
 
                 <div class="form-group">
@@ -146,6 +147,7 @@
     
 </div>
 
+<!-- Inicia el modal que mostrara la advertencia al intentar borrar el usuario  -->
 <div id='modal'>
     <!-- Modal -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -166,6 +168,7 @@
     </div>
 </div>
 
+<!-- Parte donde se muestran los comentarios -->
 <div class='col-xs-12 col-sm-12 col-md-12'>
     <h2>Ultimos 10 comentarios:</h2>
 

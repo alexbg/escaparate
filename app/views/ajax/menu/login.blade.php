@@ -1,8 +1,5 @@
-@extends('index')
-
-@section('content')
-    <h1>Formulario Login</h1>
-    {{ Form::open(array('url' => 'login','role'=> 'form',)) }}
+<h1>Formulario Login</h1>
+    {{ Form::open(array('url' => 'login','role'=> 'form', 'data-stop')) }}
     
         <div class="form-group">
             {{ Form::label('email', 'Correo electronico') }}
@@ -20,4 +17,4 @@
 
     
     {{ Form::close() }}
-@stop
+
