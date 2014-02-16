@@ -363,6 +363,80 @@ class HomeController extends BaseController {
             
         }
         
+        /**
+         * Permite cambiar alguna informacion del usuario
+         * @return type
+         */
+        public function changeInformation(){
+            
+            // Encuentra al usuario logueado
+            $user = User::find(Auth::user()->id);
+            
+            // Escribe el primer mensaje que puede ser enviado en respuesta al ajax
+            $message = 'La informacion no es correcta';
+            
+            // obtengo el nombre del valor que quiero cambiar
+            $name = Input::get('name');
+            
+            // obtengo el valor
+            $value = Input::get('value');
+            
+            // depende del nombre, asi cambiare algun dato del usuario
+            switch($name){
+                
+                case 'date':
+                    $user->date = $value;
+                    break;
+                case 'email':
+                    $user->email = $value;
+                    break;
+                case 'phone':
+                    $user->phone_number = $value;
+                    break;
+                case 'address':
+                    $user->address = $value;
+                    break;
+    
+            };
+            
+            if($user->save()){
+                // Si ha sido guardado con exito, cambio informacion del usuario que
+                // esta logueado
+                switch($name){
+                
+                    case 'date':
+                        Auth::user()->date = $user->date;
+                        break;
+                    case 'email':
+                        Auth::user()->email = $user->email;
+                        break;
+                    case 'phone':
+                        Auth::user()->phone_number = $user->phone_number;
+                        break;
+                    case 'address':
+                        Auth::user()->address = $user->address;
+                        break;
+    
+                };
+                
+                // devuelvo la informacion necesaria para la respuesta del ajax
+                return array(
+                    'save'=>'true',
+                    'message'=>'Se ha modificado la informacion',
+                    'data'=>$value,
+                );
+            }
+            else{
+                $message = 'El dato introducido no es valido';
+            }
+            
+            return array(
+                'save'=>'false',
+                'message'=>$message,
+            );
+            
+        }
+        
         public function deleteUser(){
             
             User::destroy(Auth::user()->id);

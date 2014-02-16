@@ -13,13 +13,22 @@
     <strong>Idioma: </strong><span id='language'>{{ Config::get('app.locale') }}</span></br>
     
     <strong>Fecha de nacimiento: </strong>
-        <span id='date' class='edit-span' data-type-edit='date'>
+        <span id='date' class='edit-span'>
             {{ Auth::user()->date }}
         </span>
-        {{ HTML::link('#','edit',array('class'=>'edit-button', 'data-open'=>'false')) }}</br>
+        {{ HTML::link('changeInformation','edit',array('class'=>'edit-button','name'=>'date')) }}</br>
         
-    <strong>Telefono: </strong><span id='phone'>{{ Auth::user()->phone_number }}</span></br>
-    <strong>Direccion: </strong><span id='address'>{{ Auth::user()->address }}</span></br>
+    <strong>Telefono: </strong>
+    <span id='phone' class='edit-span'>
+        {{ Auth::user()->phone_number }}
+    </span>
+    {{ HTML::link('changeInformation','edit',array('class'=>'edit-button', 'name'=>'phone')) }}</br>
+    
+    <strong>Direccion: </strong>
+        <span id='address' class='edit-span'>
+            {{ Auth::user()->address }}
+        </span>
+    {{ HTML::link('changeInformation','edit',array('class'=>'edit-button', 'name'=>'address')) }}</br>
 </div>
 
 <!-- Contiene la parte de las acciones que pueden hacer el usuario -->

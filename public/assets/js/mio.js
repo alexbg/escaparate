@@ -245,47 +245,159 @@ function message(element,message,type){
 
 /*** CALENDARIO FECHA PARA EL FORMULARIO ***/
 
-$(function() {
+/*$(function() {
     $( "#datepicker" ).datepicker("option", "showAnim", 'fadeIn'); 
-});
+});*/
 
 
 /*** EDIT INPUT ***/
-/* TODOS ESTOS DATOS ESTAN EN EL LINK 
+/* POR AHORA NO SE DEBERA DE ABRIR MAS DE UN EDIT SI YA ESTA ABIERTO UNO
  * url: sera el href del boton que lanzara el edit(edit-button)
  * name: sera el name del input
  * type(data-type-edit): sera el tipo de formato a validar
  * valor: sera el valor que tiene el campo en ese momento
- * open(data-open): indicara si esta activo o no con true o false 
+ * cache: almacena el valor principal, para poder detectar si ha sido modificado o no
+ * open: indicara si esta activo o no con true o false 
  * ESTE ES EL FORMATO QUE TENDRA QUE TENER(laravel)
  *  <strong>Fecha de nacimiento: </strong>
-        <span id='date' class='edit-span'>{{ Auth::user()->date }}</span>
-        {{ HTML::link('#','edit',array('class'=>'edit-button')) }}
+        <span id='date' class='edit-span'>
+            {{ Auth::user()->date }}
+        </span>
+        {{ HTML::link('changeInformation','edit',array('class'=>'edit-button', 'data-open'=>'false', 'name'=>'date')) }}</br>
  */
+// Comprueba si el dit ya habia sido pulsado
+var open = false;
+var cache = null;
+var url;
+var name;
 $('.edit-button').click(function(event){
+    // Cierro la funcion principal
+    event.preventDefault();
     /*Genero el formulario si no esta ya generado*/
-    if(!$(this).data('open')){
-        var url = $(this).attr('href');
-        var name = $(this).attr('name');
-        var valor =  $(this).prev().text();
-        var formulario = $("<form action='"+url+"' method='PUT' role='form' class='form-inline'>\n\
-                        <div class='form-group'>\n\
-                      <input type='text' class='form-control' value='"+valor+"'/>\n\
-                      <div class='error' name='"+name+"'></div>\n\
-                       </div>\n\
-                        </form>");
-        $(this).prev().html(formulario);
-        $(this).data('open','true');
-    }
-    else{
-        // si ya esta generado, vuelvo a como estaba antes
-        var valor = $(this).prev().find('input').val()
-        $(this).prev().html($(this).prev().find('input').val());
-        $(this).data('open','false');
-    }
     
-    
-})
+    // si ya habia sido pulsado, entonces entra en el if
+        if(!open){
+                url = $(this).attr('href');
+                // el link debe tener un atributo name, para saber que tipo de datos se va a validar
+                name = $(this).attr('name');
+                // trim elimina todos los espacios en blanco que haya
+                cache =  $.trim($(this).prev().text());
+                var formulario = $("<form action='"+url+"' method='PUT' role='form' class='form-inline'>\n\
+                                <div class='form-group'>\n\
+                              <input type='text' class='form-control' value='"+cache+"'/>\n\
+                              <div class='error' name='"+name+"'></div>\n\
+                               </div>\n\
+                                </form>");
+                // inserto el formulario en el span
+                $(this).prev().html(formulario);
+                // indico que el formulario esta abierto
+                open = true; 
+        }
+        else{
+            if(cache != null){
+            // si ya esta generado, vuelvo a como estaba antes
+            // trim elimina todos los espacios en blanco que haya
+            var value = $.trim($(this).prev().find('input').val());
+            // guado el elemento que lanza el evento click
+            element = $(this);
+            // si el valor es el mismo, no cambia nada, solo cierra el form
+            // En caso contrario empieza el ajax
+            if(cache != value){
+                // envio la peticion ajax
+                $('.ajax-gif').show();
+                // Inicio la peticion ajax
+                $.ajax(url,{
+                    type:'POST',
+                    dataType:'json',
+                    data:{name:name,value:value},
+                    success:function(data){
+                        // Escondo el gif ya que el ajax ha terminado
+                        $('.ajax-gif').hide();
+                        // Muestro el mensaje que se ha enviado en al respuesta
+                        message($('#message'),data.message,'success');
+                        // Inserto la informacion en su lugar
+                        element.prev().html(data.data);
+
+                        cache = null;
+                        // indico que el el form ya esta cerrado
+                        open = false;
+                    },
+                    error:function(jqXHR,status,errorThrown){
+                        $('.ajax-gif').hide();
+                        switch(status){
+                            case 'error':
+                                message($('#message'),'No se puede acceder al servidor','info');
+                                break;
+                        }
+                    }
+                });
+            }
+            else{
+                //en caso contrario no lo envio
+                // vuelvo a cololcar el valor que tenia antes y quito el form
+                $(this).prev().html(value);
+                
+                cache = null;
+                // indico que el el form ya esta cerrado
+                open = false;
+            }
+        }
+     }
+});
+
+
+/*** PARTE PRINCIPAL DEL EDIT INPUT ***/
+
+//var open = false;
+//var cache;
+//var url;
+//var name;
+//$('.edit-button').click(function(event){
+//    // Cierro la funcion principal
+//    event.preventDefault();
+//    /*Genero el formulario si no esta ya generado*/
+//    // si ya habia sido pulsado, entonces entra en el if
+//    if(!open){
+//        url = $(this).attr('href');
+//        // el link debe tener un atributo name, para saber que tipo de datos se va a validar
+//        name = $(this).attr('name');
+//        // trim elimina todos los espacios en blanco que haya
+//        cache =  $.trim($(this).prev().text());
+//        var formulario = $("<form action='"+url+"' method='PUT' role='form' class='form-inline'>\n\
+//                        <div class='form-group'>\n\
+//                      <input type='text' class='form-control' value='"+cache+"'/>\n\
+//                      <div class='error' name='"+name+"'></div>\n\
+//                       </div>\n\
+//                        </form>");
+//        // inserto el formulario en el span
+//        $(this).prev().html(formulario);
+//        // indico que el formulario esta abierto
+//        open = true;
+//    }
+//    else{
+//        // si ya esta generado, vuelvo a como estaba antes
+//        // trim elimina todos los espacios en blanco que haya
+//        var value = $.trim($(this).prev().find('input').val());
+//        // guado el elemento que lanza el evento click
+//        element = $(this);
+//        // si el valor es el mismo, no cambia nada, solo cierra el form
+//        // En caso contrario empieza el ajax
+//        if(cache != value){
+//            // envio la peticion ajax
+//            $('.ajax-gif').show();
+//            // ESTA PARTE ES MODIFICABLE
+//            // TERMINA LA MODIFICACION
+//        }
+//        else{
+//            //en caso contrario no lo envio
+//            // vuelvo a cololcar el valor que tenia antes y quito el form
+//            $(this).prev().html(value);
+//            // indico que el el form ya esta cerrado
+//            open = false;
+//        }
+//    }
+//})
+
 
 /** Validara los datos editatos con EDIT INPUT **/
 function validate(){
