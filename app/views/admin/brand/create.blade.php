@@ -2,7 +2,7 @@
 
 @section('content')
     <h1>Formulario añadir marca</h1>
-    {{ Form::open(array('url' => 'brand','role'=> 'form')) }}
+    {{ Form::open(array('url' => 'brand','role'=> 'form', 'data-stop')) }}
     <!-- -->
     <div class="form-group">
        {{ Form::label('name', 'Nombre') }}

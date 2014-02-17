@@ -2,7 +2,7 @@
 
 @section('content')
     <h1>Formulario añadir Telefono</h1>
-    {{ Form::open(array('url' => 'phone','role'=> 'form')) }}
+    {{ Form::open(array('url' => 'phone','role'=> 'form', 'data-stop')) }}
     <!-- -->
     <div class="form-group">
        {{ Form::label('name', 'Nombre') }}

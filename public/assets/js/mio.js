@@ -115,7 +115,21 @@ $('form').submit(function(event){
                                $(value).val('');
                            }
                        }
+                       //console.log(data.type);
                     });
+                    
+                    // Si hay algun textarea, la informacion sera eliminada
+                    $('textArea').each(function(key,value){
+                        if($(value).attr('type') != 'submit'){
+                           // si type es de tipo email, entonces no cambiara el valor
+                           // del input
+                           if(data.type != 'email'){
+                               // quito cualquier string que tenga el input
+                               $(value).val('');
+                           }
+                       }
+                    })
+                    
                     // Recorro los errors, para quitar los mensajes de errores generados
                     // anteriormente
                     $('.error').each(function(key,value){
@@ -129,6 +143,26 @@ $('form').submit(function(event){
                     if(data.type == 'email'){
                         // modifico la informacion del email del perfil
                         $('#email').html(data.data)
+                    }
+                    // Si la respuesta es de un comentario, entonces genero el panel
+                    // que lo contendra y lo escondo para poder mostrarlo despues con ua animacion
+                    if(data.type == 'comment'){
+                        // Genero el panel
+                        var comment = $('<div class="panel panel-primary">\n\
+                            <div class="panel-heading">\n\
+                            <strong>User: </strong>'+data.data.user+'\n\
+                            <strong>Date:</strong>'+data.data.created.date+'\n\
+                            </div>\n\
+                            <div class="panel-body">\n\
+                            '+data.data.comment+'\n\
+                            </div>'
+                        ).hide();
+                        
+                        // prepend lo coloca al principio del elemento
+                        $('#add-comment').prepend(comment);
+                        
+                        // muestro el comentario
+                        comment.show(500);
                     }
 
                     /*if(data.type = 'language'){
@@ -260,10 +294,11 @@ function message(element,message,type){
  * open: indicara si esta activo o no con true o false 
  * ESTE ES EL FORMATO QUE TENDRA QUE TENER(laravel)
  *  <strong>Fecha de nacimiento: </strong>
-        <span id='date' class='edit-span'>
-            {{ Auth::user()->date }}
+       <span id='address' class='edit-span'>
+            {{ Auth::user()->address }}
         </span>
-        {{ HTML::link('changeInformation','edit',array('class'=>'edit-button', 'data-open'=>'false', 'name'=>'date')) }}</br>
+    {{ HTML::link('changeInformation','edit',array('class'=>'edit-button', 'name'=>'address')) }}</br>
+   LA RESPUESTA ES LA MISMA QUE EL AJAX CREADO ANTERIORMENTE
  */
 // Comprueba si el dit ya habia sido pulsado
 var open = false;
@@ -280,24 +315,60 @@ $('.edit-button').click(function(event){
                 url = $(this).attr('href');
                 // el link debe tener un atributo name, para saber que tipo de datos se va a validar
                 name = $(this).attr('name');
-                // trim elimina todos los espacios en blanco que haya
-                cache =  $.trim($(this).prev().text());
-                var formulario = $("<form action='"+url+"' method='PUT' role='form' class='form-inline'>\n\
-                                <div class='form-group'>\n\
-                              <input type='text' class='form-control' value='"+cache+"'/>\n\
-                              <div class='error' name='"+name+"'></div>\n\
-                               </div>\n\
-                                </form>");
-                // inserto el formulario en el span
-                $(this).prev().html(formulario);
-                // indico que el formulario esta abierto
-                open = true; 
+                // Si el nombre es comment se ejecutara de forma diferente, a causa de las ubicaciones
+                // en el panel, ya que no es lo mismo que antes
+                if(name!='comment'){
+                    // trim elimina todos los espacios en blanco que haya
+                    cache =  $.trim($(this).prev().text());
+                    //$(this).prev().toggle('fast');
+
+                    var formulario = $("<form action='"+url+"' role='form' class='form-inline'>\n\
+                                    <div class='form-group'>\n\
+                                  <input type='text' class='form-control' value='"+cache+"'/>\n\
+                                  <div class='error' name='"+name+"'></div>\n\
+                                   </div>\n\
+                                    </form>");
+                    // inserto el formulario en el span
+                    $(this).prev().html(formulario);
+                    // indico que el formulario esta abierto
+                    open = true; 
+                }
+                else{
+                    //console.log('entra');
+                    // busco en el padre y despues del previo y consigo llegar al texto
+                    // y lo guardo en la cache
+                    cache =  $.trim($(this).parent().prev().text());
+                    // Este formulario es diferente, tiene un texarea
+                    var formulario = $("<form action='"+url+"' role='form' class='form-inline'>\n\
+                                    <div class='form-group'>\n\
+                                  <textarea class='form-control' rows='3'>"+cache+"</textarea>\n\
+                                  <div class='error' name='"+name+"'></div>\n\
+                                   </div>\n\
+                                    </form>");
+                    // inserto el formulario            
+                    $(this).parent().prev().html(formulario);
+                    // Indico que ha sido abierto el formulario
+                    open = true;
+                }
         }
         else{
-            if(cache != null){
+            // si los nombre son diferentes, significa que no son el mismo link
+            // y solo puedo tener un link abierto, por eso muestro un mensaje y no dejo
+            // pasar a la funcion ajax
+            var value;
+            if($(this).attr('name') == name){
             // si ya esta generado, vuelvo a como estaba antes
             // trim elimina todos los espacios en blanco que haya
-            var value = $.trim($(this).prev().find('input').val());
+            // si es un comentario buscara un textarea y en diferente lugar,
+            // si no es un comentario buscara un input
+            if(name!='comment'){
+                value = $.trim($(this).prev().find('input').val());
+            }
+            else{
+                
+                value = $.trim($(this).parent().prev().find('textArea').val());
+                console.log(value);
+            }
             // guado el elemento que lanza el evento click
             element = $(this);
             // si el valor es el mismo, no cambia nada, solo cierra el form
@@ -316,8 +387,13 @@ $('.edit-button').click(function(event){
                         // Muestro el mensaje que se ha enviado en al respuesta
                         message($('#message'),data.message,'success');
                         // Inserto la informacion en su lugar
-                        element.prev().html(data.data);
-
+                        // si es un comentario, lo insertara en diferente lugar
+                        if(name!='comment'){
+                            element.prev().html(data.data);
+                        }
+                        else{
+                            element.parent().prev().html(data.data);
+                        }
                         cache = null;
                         // indico que el el form ya esta cerrado
                         open = false;
@@ -335,12 +411,19 @@ $('.edit-button').click(function(event){
             else{
                 //en caso contrario no lo envio
                 // vuelvo a cololcar el valor que tenia antes y quito el form
-                $(this).prev().html(value);
-                
+                if(name!='comment'){
+                    $(this).prev().html(value);
+                }
+                else{
+                    $(this).parent().prev().html(value);
+                }
                 cache = null;
                 // indico que el el form ya esta cerrado
                 open = false;
             }
+        }
+        else{
+            message($('#message'),'Debe cerrar el anterior','info');
         }
      }
 });

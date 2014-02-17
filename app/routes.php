@@ -34,6 +34,8 @@ Route::get('comment/create/{id}','CommentController@create');
 
 Route::post('comment/store/{id}','CommentController@store');
 
+Route::post('comment/{id}/edit','CommentController@edit');
+
 Route::get('phone/create/{id}','PhoneController@create');
 
 Route::get('/profile','HomeController@profile');

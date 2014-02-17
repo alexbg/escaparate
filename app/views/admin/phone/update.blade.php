@@ -2,7 +2,7 @@
 
 @section('content')
     <h1>Formulario añadir Telefono</h1>
-    {{ Form::model($phone,array('url' => array('phone',$phone->id),'role'=> 'form','method' => 'PUT')) }}
+    {{ Form::model($phone,array('url' => array('phone',$phone->id),'role'=> 'form','method' => 'PUT', 'data-stop')) }}
     <!-- -->
     
     

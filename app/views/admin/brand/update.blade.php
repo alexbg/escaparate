@@ -2,7 +2,7 @@
 
 @section('content')
     <h1>Formulario añadir marca</h1>
-    {{ Form::model($brand, array('url' => array('brand',$brand->id),'method' => 'PUT')) }}
+    {{ Form::model($brand, array('url' => array('brand',$brand->id),'method' => 'PUT', 'data-stop')) }}
     <!-- -->
     <div class="form-group">
        {{ Form::label('name', 'Nombre') }}

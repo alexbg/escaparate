@@ -59,19 +59,19 @@
                    {{ Form::label('oldPassword', trans('forms.password.oldPassword')) }}
                    {{ Form::password('oldPassword',array('class'=>'form-control')) }}
                    <!-- Todas las class=error se encargan de mostrar los mensajes de los datos erroneos -->
-                   <div class='error' name='oldPassword'></div>
+                   <div class='error text-danger' name='oldPassword'></div>
                 </div>
 
                 <div class="form-group">
                    {{ Form::label('newPassword', trans('forms.password.newPassword')) }}
                    {{ Form::password('newPassword',array('class'=>'form-control')) }}
-                   <div class='error' name='newPassword'></div>
+                   <div class='error text-danger' name='newPassword'></div>
                 </div>
 
                 <div class="form-group">
                    {{ Form::label('repeatPassword', trans('forms.password.repeatPassword')) }}
                    {{ Form::Password('repeatPassword',array('class'=>'form-control')) }}
-                   <div class='error' name='repeatPassword'></div>
+                   <div class='error text-danger' name='repeatPassword'></div>
                 </div>
 
                     {{ Form::submit(trans('forms.password.button'),array('class'=>'btn btn-default')) }}
@@ -99,7 +99,7 @@
                 <div class="form-group">
                    {{ Form::label('email', trans('forms.email.changeEmail')) }}
                    {{ Form::email('email',Auth::user()->email,array('class'=>'form-control')) }}
-                   <div class='error' name='email'></div>
+                   <div class='error text-danger' name='email'></div>
                 </div>
 
                     {{ Form::submit(trans('forms.email.button'),array('class'=>'btn btn-default')) }}
@@ -116,7 +116,8 @@
               </a>
             </h4>
           </div>
-          <div id="delete" class="panel-collapse collapse">
+          <!-- Cambiar el deleteddd por delete y comrpobar que pasa con el modal que siempre elimina al usuario -->
+          <div id="deleteddd" class="panel-collapse collapse">
             <div class="panel-body">
                 
                 <p class='text-warning'>{{ trans('forms.delete.warning') }}</p>
@@ -132,7 +133,7 @@
             </div>
           </div>
         </div>
-        
+        <!-- Panel para cambiar el lenguaje -->
         <div class="panel">
           <div class="panel-heading">
             <h4 class="panel-title">
@@ -151,7 +152,7 @@
                 <div class="form-group">
                    {{ Form::label('language', trans('forms.language.language')) }}
                    {{ Form::select('language',array('en'=>'English','es'=>'Español'),' ',array('class'=>'form-control')) }}
-                   <div class='error' name='language'></div>
+                   <div class='error text-danger' name='language'></div>
                 </div>
 
                     {{ Form::submit(trans('forms.language.button'),array('class'=>'btn btn-default')) }}
@@ -171,7 +172,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            
             <h4 class="modal-title" id="myModalLabel">{{ trans('forms.delete.modal.title') }}</h4>
           </div>
           <div class="modal-body">
@@ -179,6 +180,7 @@
           </div>
           <div class="modal-footer">
             {{ HTML::link('#',trans('forms.delete.button'),array('class'=>'btn btn-danger')) }}
+            {{ HTML::link('#','Salir',array('class'=>'btn btn-info')) }}
           </div>
         </div>
       </div>
@@ -199,10 +201,12 @@
               {{ $value->created_at }}
             </div>
             <div class="panel-body">
-                {{ $value->comment }}
+                 <span id='comment' class='edit-span'>
+                    {{ $value->comment }}
+                </span> 
             </div>
             <div class="panel-footer">
-                {{ HTML::link('comment/'.$value->id."/edit",'Editar') }}
+                {{ HTML::link('comment/'.$value->id."/edit",'Editar',array('class'=>'edit-button', 'name'=>'comment')) }}
             </div>
         </div>
     @endforeach

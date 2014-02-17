@@ -48,7 +48,7 @@ class CommentController extends \BaseController {
             //almaceno la informacion en la base de datos e informo al usuario
             // Validator::make(Request::all(),Comment::$rules); POR SI SOLO SIEMPRE DEVUELVE TRUE
             // PASE O NO PASE LA VALIDACION
-            $pass = Validator::make(Request::all(),Comment::$rules);
+            /*$pass = Validator::make(Request::all(),Comment::$rules);
             if(!$pass->fails()){
                 $comment = new Comment(Request::all());
                 
@@ -62,7 +62,48 @@ class CommentController extends \BaseController {
             }
             
             return Redirect::to('comment/create/'.$id)
-                            ->with('message','El comentario no puede estar vacio');
+                            ->with('message','El comentario no puede estar vacio');*/
+            
+            $message = 'Hay algun error';
+            
+            $pass = Validator::make(Request::all(),Comment::$rules);
+            if(!$pass->fails()){
+                $comment = new Comment(Request::all());
+                
+                $comment->id_phone = $id;
+                $comment->id_user = Auth::user()->id;
+                
+                if($comment->save()){
+                     //return Redirect::to('phone/'.$id)->with('message','El comentario ha sido añadido');
+                    return array(
+                        'save'=>true,
+                        'message'=>'El comentario ha sido guardado',
+                        'type'=>'comment',
+                        'data'=>array(
+                            'user'=>Auth::user()->name,
+                            'created'=>$comment->created_at,
+                            'comment'=>$comment->comment
+                        )
+                    );
+                }
+                else{
+                    $message = 'No se puede guardar en el servidor, intentelo mas tarde';
+                }
+                
+            }
+            else{
+                $message = 'La informacion enviada no es valida';
+            }
+            
+            return array(
+                'save'=>false,
+                'message'=>$message,
+                'data'=>array(
+                    'error'=>$pass->messages()->toArray()
+                )
+            );
+            
+            
                             
 	}
 
@@ -85,8 +126,28 @@ class CommentController extends \BaseController {
 	 */
 	public function edit($id)
 	{
-            $comment = Comment::find($id);
-            return View::make('comments/update')->with('comment',$comment);
+            /*$comment = Comment::find($id);
+            return View::make('comments/update')->with('comment',$comment);*/
+            
+            $message = 'Hay algun dato erroneo';
+            $validar = array('comment'=>Input::get('value'));
+            $pass = Validator::make($validar,Comment::$rules);
+            if(!$pass->fails()){
+                $comment = Comment::find($id);
+                $comment->comment = Input::get('value');
+                if($comment->save()){
+                    return array(
+                        'save'=>true,
+                        'message'=>'El comentario ha sido editado',
+                        'data'=>$comment->comment,   
+                    );
+                }
+            }
+            
+            return array(
+                'save'=>false,
+                'message'=>$message
+            );
 	}
 
 	/**
