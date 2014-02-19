@@ -71,7 +71,7 @@
                         <!-- se mostrara el link de logout cuando el usuario esta logueado -->
                         @if(Auth::check())
                             <ul class='nav navbar-nav navbar-right'>
-                                <li>{{ HTML::link('logout','logout '.'('.Auth::user()->name.')') }}</li>
+                                <li>{{ HTML::link('logout','logout '.'('.Auth::user()->username.')') }}</li>
                             </ul>
                         @endif
                         <!-- gif que se muestrea cuando se esta obteniendo la informacion mediante ajax -->

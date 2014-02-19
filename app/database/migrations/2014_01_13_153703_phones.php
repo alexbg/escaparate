@@ -23,6 +23,7 @@ class Phones extends Migration {
                 $table->string('cpu');
                 $table->string('ram');
                 $table->string('camera');
+                $table->double('price');
                 $table->timestamps();
                 
                 // Permite establecer cual va a ser la clave ajena

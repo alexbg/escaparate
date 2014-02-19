@@ -63,10 +63,12 @@ class CommentController extends \BaseController {
             
             return Redirect::to('comment/create/'.$id)
                             ->with('message','El comentario no puede estar vacio');*/
-            
+            // Inicio el mensaje de error
             $message = 'Hay algun error';
             
+            // compruebo si el comentario es valido con la validacion
             $pass = Validator::make(Request::all(),Comment::$rules);
+            
             if(!$pass->fails()){
                 $comment = new Comment(Request::all());
                 

@@ -14,11 +14,28 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
             'newPassword' => 'sometimes|same:repeatPassword|required|min:6',
             'repeatPassword' => 'sometimes|same:repeatPassword|required|min:6',
             'address'=>'sometimes',
-            'day'=>'sometimes|required',
-            'month'=>'sometimes|required',
-            'year'=>'sometimes|required',
-            'phone'=>'sometimes',
+            'phone'=>'sometimes|digits_between:9,9|integer',
+            'url'=>'sometimes|url',
+            //'nif'=>'sometimes|regex:/^(([A-Z]\d{8})|(\d{8}[A-Z]))$/',
+            //'nif'=>array('required','regex:^(([A-Z]\d{8})|(\d{8}[A-Z]))$'),
+            'day'=>'sometimes|integer|max:31|required',
+            'month'=>'sometimes|integer|max:12|required',
+            'year'=>'sometimes|integer|digits_between:4,4|required',
+            'date'=>'sometimes'
         );
+        
+        // MODIFICADO EN CLASE
+        protected $fillable = array(
+            'username',
+            'email',
+            'date',
+            'url',
+            'address',
+            'phone',
+            'nif',
+            'sex'
+        );
+        // HASTA AQUI
         
         /*public static $rulesChangePassword = array(
             'newPassword' => 'required|min:6',

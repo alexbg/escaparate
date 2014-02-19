@@ -116,21 +116,20 @@ class HomeController extends BaseController {
             if(Request::ajax()){
                 // Si hay una peticion en el request comprobara los datos de la peticion
                 $message;
-                // instancio el modelo User
-                $user = new User();
+                
                 // Comprueba que los datos son validos con el Validatos::make
                 // pasandole los datos de request::all con las reglas generadas en el modelo de User
                 
-                $pass = Validator::make(Request::all(),$user::$rules);
+               
+                
+                $pass = Validator::make(Request::all(),User::$rules);
                 // Si ha fallado la validacion, lo redirecciona al formulario con los errores
                 if(!$pass->fails()){
-                    //return Redirect::to('register')->withErrors($pass);
-                    $user->name = Input::get('username');
-                    $user->password = Hash::make(Input::get('password'));
-                    $user->email = Input::get('email');
+                    
+                    // instancio el modelo User
+                    $user = new User(Request::all());
                     $user->date = Input::get('day').'/'.Input::get('month').'/'.Input::get('year');
-                    $user->address = Input::get('address');
-                    $user->phone_number = Input::get('phone');
+                    $user->password = Hash::make(Input::get('password'));
                     if($user->save()){
                         // informo al usuario de que esta siendo redirigido al login
                         $message = 'Usuario guardado. Redirigiendo al login...';
@@ -335,7 +334,6 @@ class HomeController extends BaseController {
                     $message = 'Alguno de los datos es incorrecto';
                 }
                 
-                
                 return array(
                         'save'=>false,
                         'data'=>
@@ -375,63 +373,46 @@ class HomeController extends BaseController {
             // Escribe el primer mensaje que puede ser enviado en respuesta al ajax
             $message = 'La informacion no es correcta';
             
-            // obtengo el nombre del valor que quiero cambiar
-            $name = Input::get('name');
+            // pasa la validacion
+            $pass = Validator::make(Request::all(),User::$rules);
             
-            // obtengo el valor
-            $value = Input::get('value');
-            
-            // depende del nombre, asi cambiare algun dato del usuario
-            switch($name){
+            // si la validacion no ha fallado entra en el if
+            if(!$pass->fails()){
                 
-                case 'date':
-                    $user->date = $value;
-                    break;
-                case 'email':
-                    $user->email = $value;
-                    break;
-                case 'phone':
-                    $user->phone_number = $value;
-                    break;
-                case 'address':
-                    $user->address = $value;
-                    break;
-    
-            };
-            
-            if($user->save()){
-                // Si ha sido guardado con exito, cambio informacion del usuario que
-                // esta logueado
-                switch($name){
+                 // Encuentra al usuario logueado
+                $user = User::find(Auth::user()->id);
+                // variable que almacenara la informacion a devolver a la pagina
+                $send;
                 
+                // Si hay alguna de las siguientes situaciones, entonces cambiara
+                // la informacion
+                switch(array_keys(Request::all())[0]){
                     case 'date':
-                        Auth::user()->date = $user->date;
-                        break;
-                    case 'email':
-                        Auth::user()->email = $user->email;
+                        $user->date = Input::get('date');
+                        $send = $user->date;
                         break;
                     case 'phone':
-                        Auth::user()->phone_number = $user->phone_number;
+                        $user->phone = Input::get('phone');
+                        $send = $user->phone;
                         break;
                     case 'address':
-                        Auth::user()->address = $user->address;
+                        $user->address = Input::get('address');
+                        $send = $user->address;
                         break;
-    
-                };
+                }
                 
-                // devuelvo la informacion necesaria para la respuesta del ajax
-                return array(
-                    'save'=>'true',
-                    'message'=>'Se ha modificado la informacion',
-                    'data'=>$value,
-                );
-            }
-            else{
-                $message = 'El dato introducido no es valido';
+                // si consigue guardar, enviara la informacion con el mensaje
+                if($user->save()){
+                     return array(
+                        'save'=>true,
+                        'message'=>'Se ha modificado la informacion',
+                        'data'=>$send,
+                    );
+                } 
             }
             
             return array(
-                'save'=>'false',
+                'save'=>false,
                 'message'=>$message,
             );
             

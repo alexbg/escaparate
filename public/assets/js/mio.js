@@ -1,6 +1,14 @@
 //$('.ajax').hide();
 $('.ajax-gif').hide();
 
+// FUNCIONES A CARGAR
+//edit();
+
+
+// VARIABLES GLOBALES
+var value = [];
+// alamcena el valor optenido en el data.data del ajax del edit input
+var temp = null;
 
 //***SHOWPHONES***
 
@@ -277,11 +285,258 @@ function message(element,message,type){
 };
 
 
-/*** CALENDARIO FECHA PARA EL FORMULARIO ***/
+/***INPUT EDIT***/
 
-/*$(function() {
-    $( "#datepicker" ).datepicker("option", "showAnim", 'fadeIn'); 
-});*/
+/**
+ * 
+ * @param {type} event
+ * @param {type} element
+ * @returns {undefined}
+ */
+function edit(event,element){
+    
+    
+// Si la clase tiene el atributo class como edit
+// entra en el if
+
+
+
+    // Guardo la informacion de la direccion del enlace
+    var url = element.attr('href');
+
+    // guardo la informacion del name del link
+    var name = element.attr('name');
+
+    // guardo el texto del elemento
+    var cache =  $.trim(element.prev().text());
+
+    // genero el formulario
+    var formulario = $("<form action='"+url+"' role='form' class='form-inline'>\n\
+                            <div class='form-group'>\n\
+                               <input type='text' class='form-control' value='"+cache+"' name='"+name+"'/>\n\
+                               <div class='error' name='"+name+"'></div>\n\
+                            </div>\n\
+                               <input type='submit' value='send' class='btn btn-default'>\n\
+                        </form>");
+
+    // inserto el formulario
+
+    element.prev().html(formulario);
+
+    // cambio el nombre de la clase
+    //element.attr('class','opened');
+
+    // le pongo el atributo id con al longitud que tiene el array en ese momento
+    // el di sirve para saber donde esta almacenador el valor del span antes
+    // de poner el formulario
+    element.attr('id',value.length);
+
+    // inserto el elemento en el array que almacena los valores
+    value.push(cache);
+
+    // a este elemento le elimino el evento click que tenia
+    element.off('click');
+
+    // le añado uno nuevo para que la proxima vez, ejecute el opened
+    element.on('click',function(event){
+
+            // evito que funcione como un link
+
+            event.preventDefault();
+
+            // si hay algun cambio se ejecuta la funcion send() dentro de la funcion change
+            // en caso contrario, dejare todo como estaba
+            var input = $(this).prev().find('input');
+
+            if(!changed($(this),input)){
+
+                 // le paso el evento y el elemento que tiene el evento
+
+                opened(event,$(this));
+
+            }
+            else{
+               // si ha cambiado algun dato, ejecuto la funcion send
+               // que permite hacer una peticion ajax
+               // le paso el elmento del click, el evento y el padre
+               // del input
+               send(input.parent(),element,event)
+
+            }
+
+    });
+
+};
+
+/**
+ * Cierra el formulario y vuelve a colocar todo como estaba
+ * event: informacion sobre el elemento lanzado
+ * element: elemento al que le afecta el click que en este caso es el link 
+ * @param {type} event
+ * @param {type} element
+ * @returns {undefined}
+ */
+function opened(event,element){
+    
+    // si el temp que es la variable donde se guarda la informacion devuelta
+    // por la peticion ajax, es null, entonces significa que no ha cambiado nada
+    // y lo deja cmo estaba antes
+    if(temp == null){
+        // obtengo el id del link para obtener el valor que tiene en el array value
+        var id = element.attr('id');
+        
+        // optengo el valor del array value
+        var cache = value[id];
+        
+        
+        // devuelvo al span como estaba antes
+        element.prev().html(cache);
+        
+        
+    }
+    else{
+        // meto el valor del temp en el span
+        
+        element.prev().html(temp);
+        
+        // dejo el temp a null para la siguiente peticion
+        
+        temp = null;
+    }
+    
+    // quito el vento click que tenia el elemento
+    element.off('click');
+
+    // le añado un nuevo evento click
+    element.on('click',function(event){
+        // dentego la ejecucion principal
+        event.preventDefault();
+        // le adjunto la funcion edit
+        edit(event,$(this));
+    });
+    
+};
+
+// Comprueba si ha habido algun cambio
+/**
+ * Devuelve true si se ha modificado la informacion del input del formulario
+ * En caso contrario, devuelve false
+ * element: el elemento que tiene el id en este caso el link
+ * input: el input del formulario ha validar
+ * @param {type} element
+ * @param {type} input
+ * @returns {Boolean}
+ */
+function changed(element,input){
+    
+    var change = false;
+    
+    if(value[element.attr('id')] != $.trim(input.val())){
+        
+        change = true
+    }
+    
+    return change;
+    
+};
+
+
+/**
+ * Permite guardar mediante ajax, la informacion de los formularios de los 
+ * INPUT EDIT
+ * form: el formulario de donde voy a serializar los datos y a enviarlos
+ * click: el elemento donde hice click
+ * event: informacion sobre el evento click
+ * @param {type} form
+ * @param {type} click
+ * @param {type} event
+ * @returns {undefined}
+ */
+function send(form,click,event){
+    
+    if(!form.data("stop")){
+        // paro el evento principal
+        //event.preventDefault();
+        console.log(form.attr('action'));
+        // serializo la informacion de los formularios, pasandolos aun json de clave valor
+        var element = form.serializeArray();
+        // Muestro el gif para indicar que la peticion va a empezar
+        $('.ajax-gif').show();
+        
+        console.log(form.serializeArray());
+        
+        // ejecuto la peticion mediante ajax
+        $.ajax(form.attr('action'),{
+            type:'POST',
+            data: element,
+            dataType:'json',
+            success:function(data){
+                // Si la peticion ha sido enviada y ha recibido respuesta
+                // escondo el gif
+                $('.ajax-gif').hide();
+                // de la informacion que ha sido enviada, compruebo si save es true
+                // o false
+                if(data.save){
+                    // ESTA PARTE ES LA QUE SE PUDE MODIFICAR
+                    
+                    
+                    
+                    message($('#message'),data.message,'success');
+                    temp = data.data;
+                    // TERMINA MODIFICACION
+                    opened(event,click);
+                    
+                    
+                }
+                else{
+                    // ESTA PARTE ES LA QUE SE PUDE MODIFICAR
+
+                    message($('#message'),data.message,'warning');
+                    // TERMINA MODIFICACION
+                    
+                }
+                        },
+            error:function(jqXHR,status,errorThrown){
+                $('.ajax-gif').hide();
+                switch(status){
+                    case 'error':
+                        message($('#message'),'No se puede acceder al servidor','info');
+                        break;
+                }
+            }
+        })
+    } 
+    
+    
+}
+
+
+$( document ).ready(function() {
+    $('.edit').on('click',function(event){
+      // evito que funcione como un link
+      event.preventDefault();
+      // le paso el evento y el elemento que tiene el evento
+      edit(event,$(this));
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /*** EDIT INPUT ***/
@@ -301,132 +556,133 @@ function message(element,message,type){
    LA RESPUESTA ES LA MISMA QUE EL AJAX CREADO ANTERIORMENTE
  */
 // Comprueba si el dit ya habia sido pulsado
-var open = false;
-var cache = null;
-var url;
-var name;
-$('.edit-button').click(function(event){
-    // Cierro la funcion principal
-    event.preventDefault();
-    /*Genero el formulario si no esta ya generado*/
-    
-    // si ya habia sido pulsado, entonces entra en el if
-        if(!open){
-                url = $(this).attr('href');
-                // el link debe tener un atributo name, para saber que tipo de datos se va a validar
-                name = $(this).attr('name');
-                // Si el nombre es comment se ejecutara de forma diferente, a causa de las ubicaciones
-                // en el panel, ya que no es lo mismo que antes
-                if(name!='comment'){
-                    // trim elimina todos los espacios en blanco que haya
-                    cache =  $.trim($(this).prev().text());
-                    //$(this).prev().toggle('fast');
-
-                    var formulario = $("<form action='"+url+"' role='form' class='form-inline'>\n\
-                                    <div class='form-group'>\n\
-                                  <input type='text' class='form-control' value='"+cache+"'/>\n\
-                                  <div class='error' name='"+name+"'></div>\n\
-                                   </div>\n\
-                                    </form>");
-                    // inserto el formulario en el span
-                    $(this).prev().html(formulario);
-                    // indico que el formulario esta abierto
-                    open = true; 
-                }
-                else{
-                    //console.log('entra');
-                    // busco en el padre y despues del previo y consigo llegar al texto
-                    // y lo guardo en la cache
-                    cache =  $.trim($(this).parent().prev().text());
-                    // Este formulario es diferente, tiene un texarea
-                    var formulario = $("<form action='"+url+"' role='form' class='form-inline'>\n\
-                                    <div class='form-group'>\n\
-                                  <textarea class='form-control' rows='3'>"+cache+"</textarea>\n\
-                                  <div class='error' name='"+name+"'></div>\n\
-                                   </div>\n\
-                                    </form>");
-                    // inserto el formulario            
-                    $(this).parent().prev().html(formulario);
-                    // Indico que ha sido abierto el formulario
-                    open = true;
-                }
-        }
-        else{
-            // si los nombre son diferentes, significa que no son el mismo link
-            // y solo puedo tener un link abierto, por eso muestro un mensaje y no dejo
-            // pasar a la funcion ajax
-            var value;
-            if($(this).attr('name') == name){
-            // si ya esta generado, vuelvo a como estaba antes
-            // trim elimina todos los espacios en blanco que haya
-            // si es un comentario buscara un textarea y en diferente lugar,
-            // si no es un comentario buscara un input
-            if(name!='comment'){
-                value = $.trim($(this).prev().find('input').val());
-            }
-            else{
-                
-                value = $.trim($(this).parent().prev().find('textArea').val());
-                console.log(value);
-            }
-            // guado el elemento que lanza el evento click
-            element = $(this);
-            // si el valor es el mismo, no cambia nada, solo cierra el form
-            // En caso contrario empieza el ajax
-            if(cache != value){
-                // envio la peticion ajax
-                $('.ajax-gif').show();
-                // Inicio la peticion ajax
-                $.ajax(url,{
-                    type:'POST',
-                    dataType:'json',
-                    data:{name:name,value:value},
-                    success:function(data){
-                        // Escondo el gif ya que el ajax ha terminado
-                        $('.ajax-gif').hide();
-                        // Muestro el mensaje que se ha enviado en al respuesta
-                        message($('#message'),data.message,'success');
-                        // Inserto la informacion en su lugar
-                        // si es un comentario, lo insertara en diferente lugar
-                        if(name!='comment'){
-                            element.prev().html(data.data);
-                        }
-                        else{
-                            element.parent().prev().html(data.data);
-                        }
-                        cache = null;
-                        // indico que el el form ya esta cerrado
-                        open = false;
-                    },
-                    error:function(jqXHR,status,errorThrown){
-                        $('.ajax-gif').hide();
-                        switch(status){
-                            case 'error':
-                                message($('#message'),'No se puede acceder al servidor','info');
-                                break;
-                        }
-                    }
-                });
-            }
-            else{
-                //en caso contrario no lo envio
-                // vuelvo a cololcar el valor que tenia antes y quito el form
-                if(name!='comment'){
-                    $(this).prev().html(value);
-                }
-                else{
-                    $(this).parent().prev().html(value);
-                }
-                cache = null;
-                // indico que el el form ya esta cerrado
-                open = false;
-            }
-        }
-        else{
-            message($('#message'),'Debe cerrar el anterior','info');
-        }
-     }
-});
+//var open = false;
+//var cache = null;
+//var url;
+//var name;
+//$('.edit-button').click(function(event){
+//    // Cierro la funcion principal
+//    event.preventDefault();
+//    /*Genero el formulario si no esta ya generado*/
+//    
+//    // si ya habia sido pulsado, entonces entra en el if
+//        if(!open){
+//                url = $(this).attr('href');
+//                // el link debe tener un atributo name, para saber que tipo de datos se va a validar
+//                name = $(this).attr('name');
+//                // Si el nombre es comment se ejecutara de forma diferente, a causa de las ubicaciones
+//                // en el panel, ya que no es lo mismo que antes
+//                if(name!='comment'){
+//                    // trim elimina todos los espacios en blanco que haya
+//                    cache =  $.trim($(this).prev().text());
+//                    //$(this).prev().toggle('fast');
+//
+//                    var formulario = $("<form action='"+url+"' role='form' class='form-inline'>\n\
+//                                    <div class='form-group'>\n\
+//                                  <input type='text' class='form-control' value='"+cache+"'/>\n\
+//                                  <div class='error' name='"+name+"'></div>\n\
+//                                   </div>\n\
+//                                    </form>");
+//                    // inserto el formulario en el span
+//                    $(this).prev().html(formulario);
+//                    // indico que el formulario esta abierto
+//                    open = true; 
+//                }
+//                else{
+//                    //console.log('entra');
+//                    // busco en el padre y despues del previo y consigo llegar al texto
+//                    // y lo guardo en la cache
+//                    cache =  $.trim($(this).parent().prev().text());
+//                    // Este formulario es diferente, tiene un texarea
+//                    var formulario = $("<form action='"+url+"' role='form' class='form-inline'>\n\
+//                                    <div class='form-group'>\n\
+//                                  <textarea class='form-control' rows='3'>"+cache+"</textarea>\n\
+//                                  <div class='error' name='"+name+"'></div>\n\
+//                                   </div>\n\
+//                                    </form>");
+//                    // inserto el formulario            
+//                    $(this).parent().prev().html(formulario);
+//                    // Indico que ha sido abierto el formulario
+//                    open = true;
+//                }
+//        }
+//        else{
+//            // si los nombre son diferentes, significa que no son el mismo link
+//            // y solo puedo tener un link abierto, por eso muestro un mensaje y no dejo
+//            // pasar a la funcion ajax
+//            var value;
+//            //var element = $(this).serializeArray();
+//            if($(this).attr('name') == name){
+//            // si ya esta generado, vuelvo a como estaba antes
+//            // trim elimina todos los espacios en blanco que haya
+//            // si es un comentario buscara un textarea y en diferente lugar,
+//            // si no es un comentario buscara un input
+//            if(name!='comment'){
+//                value = $.trim($(this).prev().find('input').val());
+//            }
+//            else{
+//                
+//                value = $.trim($(this).parent().prev().find('textArea').val());
+//                console.log(value);
+//            }
+//            // guado el elemento que lanza el evento click
+//            element = $(this);
+//            // si el valor es el mismo, no cambia nada, solo cierra el form
+//            // En caso contrario empieza el ajax
+//            if(cache != value){
+//                // envio la peticion ajax
+//                $('.ajax-gif').show();
+//                // Inicio la peticion ajax
+//                $.ajax(url,{
+//                    type:'POST',
+//                    dataType:'json',
+//                    data:{name:name,value:value},
+//                    success:function(data){
+//                        // Escondo el gif ya que el ajax ha terminado
+//                        $('.ajax-gif').hide();
+//                        // Muestro el mensaje que se ha enviado en al respuesta
+//                        message($('#message'),data.message,'success');
+//                        // Inserto la informacion en su lugar
+//                        // si es un comentario, lo insertara en diferente lugar
+//                        if(name!='comment'){
+//                            element.prev().html(data.data);
+//                        }
+//                        else{
+//                            element.parent().prev().html(data.data);
+//                        }
+//                        cache = null;
+//                        // indico que el el form ya esta cerrado
+//                        open = false;
+//                    },
+//                    error:function(jqXHR,status,errorThrown){
+//                        $('.ajax-gif').hide();
+//                        switch(status){
+//                            case 'error':
+//                                message($('#message'),'No se puede acceder al servidor','info');
+//                                break;
+//                        }
+//                    }
+//                });
+//            }
+//            else{
+//                //en caso contrario no lo envio
+//                // vuelvo a cololcar el valor que tenia antes y quito el form
+//                if(name!='comment'){
+//                    $(this).prev().html(value);
+//                }
+//                else{
+//                    $(this).parent().prev().html(value);
+//                }
+//                cache = null;
+//                // indico que el el form ya esta cerrado
+//                open = false;
+//            }
+//        }
+//        else{
+//            message($('#message'),'Debe cerrar el anterior','info');
+//        }
+//     }
+//});
 
 
 /*** PARTE PRINCIPAL DEL EDIT INPUT ***/

@@ -7,7 +7,7 @@
 
 <!-- Muestro informacion sobre el usuario como: email, idioma, etc -->
 <div class='col-xs-12 col-sm-6 col-md-6'>
-    <h1>Perfil de {{ $user->name }}</h1>
+    <h1>Perfil de {{ $user->username }}</h1>
     <h2>Datos:</h2>
     <strong>Correo Electronico: </strong><span id='email'>{{ Auth::user()->email }}</span></br>
     <strong>Idioma: </strong><span id='language'>{{ Config::get('app.locale') }}</span></br>
@@ -16,19 +16,19 @@
         <span id='date' class='edit-span'>
             {{ Auth::user()->date }}
         </span>
-        {{ HTML::link('changeInformation','edit',array('class'=>'edit-button','name'=>'date')) }}</br>
+        {{ HTML::link('changeInformation','edit',array('class'=>'edit','name'=>'date')) }}</br>
         
     <strong>Telefono: </strong>
     <span id='phone' class='edit-span'>
         {{ Auth::user()->phone_number }}
     </span>
-    {{ HTML::link('changeInformation','edit',array('class'=>'edit-button', 'name'=>'phone')) }}</br>
+    {{ HTML::link('changeInformation','edit',array('class'=>'edit', 'name'=>'phone')) }}</br>
     
     <strong>Direccion: </strong>
         <span id='address' class='edit-span'>
             {{ Auth::user()->address }}
         </span>
-    {{ HTML::link('changeInformation','edit',array('class'=>'edit-button', 'name'=>'address')) }}</br>
+    {{ HTML::link('changeInformation','edit',array('class'=>'edit', 'name'=>'address')) }}</br>
 </div>
 
 <!-- Contiene la parte de las acciones que pueden hacer el usuario -->
@@ -206,7 +206,7 @@
                 </span> 
             </div>
             <div class="panel-footer">
-                {{ HTML::link('comment/'.$value->id."/edit",'Editar',array('class'=>'edit-button', 'name'=>'comment')) }}
+                {{ HTML::link('comment/'.$value->id."/edit",'Editar',array('class'=>'edit', 'name'=>'comment')) }}
             </div>
         </div>
     @endforeach
