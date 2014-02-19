@@ -133,10 +133,10 @@ class CommentController extends \BaseController {
             
             $message = 'Hay algun dato erroneo';
             $validar = array('comment'=>Input::get('value'));
-            $pass = Validator::make($validar,Comment::$rules);
+            $pass = Validator::make(Request::all(),Comment::$rules);
             if(!$pass->fails()){
                 $comment = Comment::find($id);
-                $comment->comment = Input::get('value');
+                $comment->comment = Input::get('comment');
                 if($comment->save()){
                     return array(
                         'save'=>true,

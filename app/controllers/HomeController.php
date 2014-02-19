@@ -399,6 +399,14 @@ class HomeController extends BaseController {
                         $user->address = Input::get('address');
                         $send = $user->address;
                         break;
+                    case 'url':
+                        $user->url = Input::get('url');
+                        $send = $user->url;
+                        break;
+                    case 'city':
+                        $user->city = Input::get('city');
+                        $send = $user->city;
+                        break;
                 }
                 
                 // si consigue guardar, enviara la informacion con el mensaje

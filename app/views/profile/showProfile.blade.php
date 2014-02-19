@@ -29,6 +29,18 @@
             {{ Auth::user()->address }}
         </span>
     {{ HTML::link('changeInformation','edit',array('class'=>'edit', 'name'=>'address')) }}</br>
+    
+    <strong>Url: </strong>
+        <span id='url' class='edit-span'>
+            {{ Auth::user()->url }}
+        </span>
+    {{ HTML::link('changeInformation','edit',array('class'=>'edit', 'name'=>'url')) }}</br>
+    
+    <strong>City: </strong>
+        <span id='city' class='edit-span'>
+            {{ Auth::user()->city }}
+        </span>
+    {{ HTML::link('changeInformation','edit',array('class'=>'edit', 'name'=>'city')) }}</br>
 </div>
 
 <!-- Contiene la parte de las acciones que pueden hacer el usuario -->

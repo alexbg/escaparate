@@ -307,25 +307,47 @@ function edit(event,element){
     // guardo la informacion del name del link
     var name = element.attr('name');
 
-    // guardo el texto del elemento
-    var cache =  $.trim(element.prev().text());
+    
 
     // genero el formulario
-    var formulario = $("<form action='"+url+"' role='form' class='form-inline'>\n\
-                            <div class='form-group'>\n\
-                               <input type='text' class='form-control' value='"+cache+"' name='"+name+"'/>\n\
-                               <div class='error' name='"+name+"'></div>\n\
-                            </div>\n\
-                               <input type='submit' value='send' class='btn btn-default'>\n\
-                        </form>");
+    
+    // Si la peticion es para un comentario, escogera la informacion de diferentes sitios
+    if(name != 'comment'){
+        
+        // guardo el texto del elemento
+        var cache =  $.trim(element.prev().text());
+        
+        // genero el formulario
+        var formulario = $("<form action='"+url+"' role='form' class='form-inline'>\n\
+                                <div class='form-group'>\n\
+                                   <input type='text' class='form-control' value='"+cache+"' name='"+name+"'/>\n\
+                                   <div class='error' name='"+name+"'></div>\n\
+                                </div>\n\
+                                   <input type='submit' value='send' class='btn btn-default'>\n\
+                            </form>");
+        
+        // inserto el formulario
 
-    // inserto el formulario
+        element.prev().html(formulario);
+        }
+    else{
+        
+        // guardo el texto del elemento
+        var cache =  $.trim(element.parent().prev().text());
+        
+        // genero el formulario
+        var formulario = $("<form action='"+url+"' role='form'>\n\
+                                    <div class='form-group'>\n\
+                                 <textarea class='form-control' rows='3' name='"+name+"'>"+cache+"</textarea>\n\
+                                  <div class='error' name='"+name+"'></div>\n\
+                                  </div>\n\
+                                \n\
+                                   </form>");
+        // inserto el formulario
 
-    element.prev().html(formulario);
-
-    // cambio el nombre de la clase
-    //element.attr('class','opened');
-
+        element.parent().prev().html(formulario);
+    }
+    
     // le pongo el atributo id con al longitud que tiene el array en ese momento
     // el di sirve para saber donde esta almacenador el valor del span antes
     // de poner el formulario
@@ -346,8 +368,13 @@ function edit(event,element){
 
             // si hay algun cambio se ejecuta la funcion send() dentro de la funcion change
             // en caso contrario, dejare todo como estaba
-            var input = $(this).prev().find('input');
-
+            // Si es un comentario, escogera la informacion de diferentes sitios
+            if(name != 'comment'){
+                var input = $(this).prev().find('input');
+            }
+            else{
+                var input = $(this).parent().prev().find('textarea');
+            }
             if(!changed($(this),input)){
 
                  // le paso el evento y el elemento que tiene el evento
@@ -360,7 +387,13 @@ function edit(event,element){
                // que permite hacer una peticion ajax
                // le paso el elmento del click, el evento y el padre
                // del input
-               send(input.parent(),element,event)
+               if(name != 'comment'){
+                   send(input.parent(),element,event);
+               }
+               else{
+                   send(input.parent().parent(),element,event);
+               }
+               
 
             }
 
@@ -381,6 +414,10 @@ function opened(event,element){
     // si el temp que es la variable donde se guarda la informacion devuelta
     // por la peticion ajax, es null, entonces significa que no ha cambiado nada
     // y lo deja cmo estaba antes
+    
+    var name = element.attr('name');
+    
+    
     if(temp == null){
         // obtengo el id del link para obtener el valor que tiene en el array value
         var id = element.attr('id');
@@ -388,17 +425,25 @@ function opened(event,element){
         // optengo el valor del array value
         var cache = value[id];
         
-        
-        // devuelvo al span como estaba antes
-        element.prev().html(cache);
-        
-        
+        if(name != 'comment'){
+             // devuelvo al span como estaba antes
+            element.prev().html(cache);
+        }
+        else{
+            // devuelvo al span como estaba antes
+            element.parent().prev().html(cache);
+        } 
     }
     else{
-        // meto el valor del temp en el span
         
-        element.prev().html(temp);
-        
+        if(name != 'comment'){
+            // meto el valor del temp en el span
+            element.prev().html(temp);
+        }
+        else{
+            // meto el valor del temp en el span
+            element.parent().prev().html(temp);
+        }
         // dejo el temp a null para la siguiente peticion
         
         temp = null;
@@ -455,15 +500,14 @@ function changed(element,input){
 function send(form,click,event){
     
     if(!form.data("stop")){
-        // paro el evento principal
-        //event.preventDefault();
-        console.log(form.attr('action'));
+        
+        
         // serializo la informacion de los formularios, pasandolos aun json de clave valor
         var element = form.serializeArray();
         // Muestro el gif para indicar que la peticion va a empezar
         $('.ajax-gif').show();
         
-        console.log(form.serializeArray());
+        console.log(form);
         
         // ejecuto la peticion mediante ajax
         $.ajax(form.attr('action'),{
