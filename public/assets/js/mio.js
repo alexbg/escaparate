@@ -327,7 +327,7 @@ function edit(event,element){
                                    <input type='text' class='form-control' value='"+cache+"' name='"+name+"'/>\n\
                                    <div class='error' name='"+name+"'></div>\n\
                                 </div>\n\
-                                   <input type='submit' value='send' class='btn btn-default'>\n\
+                                   <input type='submit' value='send' class='btn btn-default hidden'>\n\
                             </form>");
         
         // inserto el formulario
@@ -566,7 +566,7 @@ $( document ).ready(function() {
       // le paso el evento y el elemento que tiene el evento
       edit(event,$(this));
     });
-    
+    //equalHeight($(".thumbnail"));
 });
 
 
@@ -622,6 +622,11 @@ $('#tags').selectize({
             
             error: function() {
                 $('.ajax-gif').hide();
+                switch(status){
+                    case 'error':
+                        message($('#message'),'No se puede acceder al servidor','info');
+                        break;
+                }
                 callback();
             },
             success: function(data) {
@@ -635,10 +640,110 @@ $('#tags').selectize({
 });
 
 
+/*** MISMO TAMAÑO ***/
 
 
+function equalHeight(group) {
+   tallest = 0;
+   group.each(function() {
+      thisHeight = $(this).height();
+      if(thisHeight > tallest) {
+         tallest = thisHeight;
+         console.log(tallest)
+      }
+   });
+   group.height(tallest);
+}
 
 
+/*** MORE ***/
+
+/**
+* Permite añadir mas comentarios obteniendolo mediante ajax
+ */
+$('.more').click(function(){
+   // Evito la funcion principal del enlace
+   event.preventDefault();
+   // Inicio el gif de ajax
+   $('.ajax-gif').show();
+   // Obtengo la id del ULTIMO comentario añadido.
+   // La ide la obtengo del div que tiene la clase panel
+   var id = $(this).prev().attr('id');
+   // Guardo el ultimo div con la clase panel
+   // para poder meter los comentarios despues de este elemento
+   var element = $(this).prev();
+   // Inicio la peticion ajax
+   $.ajax({
+        url: 'more',
+        type: 'GET',
+        dataType: "json",
+        data:{id:id},
+        error: function() {
+            // Si da algun error esconde el gif
+            $('.ajax-gif').hide();
+            switch(status){
+                case 'error':
+                    message($('#message'),'No se puede acceder al servidor','info');
+                    break;
+            }
+                
+        },
+        success: function(data) {
+            // si la informacion obtenida no esta vacia, entonces esque hay comentarios nuevos
+            if(data != '')
+            {
+                // Esta variable almacenara todos los comentarios ya preparados para meterlos
+                // la inicializo con '' porque si no da un undefined(cosa logica)
+                
+                var comments = '';
+                
+                // Con Object.key obtengo todas las posiciones 0,1,2 que tiene el objeto
+                // en forma de array. Despues con foreach(de jquery) recorro ese array generado
+                // y al recorrerlo, obtengo todas las key que tenian los objetos 'data'. De esta forma
+                // puedo acceder a la informacion de cada objeto que estaba en el data
+                Object.keys(data).forEach(function(key){
+                    
+                    // Genero el comentario
+                    comments = comments+
+                            '<div class="panel panel-success" id='+data[key]["id"]+'>'+
+                            '<div class="panel-heading">'+
+                            '<a href="http://localhost/escaparate/public/phone/'+data[key]["id_phone"]+'">'+data[key]['phone']['name']+'</a>'+
+                            data[key]['created_at']+
+                            '</div>'+
+                            '<div class="panel-body">'+
+                            '<span id="comment" class="edit-span">'+
+                            data[key]['comment']+
+                            '</span>'+
+                            '</div>'+
+                            '<div class="panel-footer">'+
+                            '<a href="http://localhost/escaparate/public/comment/'+data[key]['id']+'/edit" class="edit" name="comment">Editar</a>'+
+                            '</div>'+
+                            '</div>';
+                    //console.log(data[key]['name']);
+                });
+                
+                // Pongo los comentarios despues del ULTIMO comentario
+                element.after(comments);
+                // Permite volver a poner el evento click a cada nuevo comentario
+                // Lo que hace es poner el evento click a cada comentario.
+                // la function edit se encarga de si ya lo tiene, eliminarlo y ponerle uno nuevo
+                $('.edit').on('click',function(event){
+                    // evito que funcione como un link
+                    event.preventDefault();
+                    // le paso el evento y el elemento que tiene el evento
+                    edit(event,$(this));
+                });
+            }
+            else{
+                // en caso de que no me haya devuelto ningun comentario, significa que
+                // ya no hay nigun comentario del usuario
+                message($('#message'),'No tienes mas comentarios','info');
+            }
+            // Escondo el gif
+            $('.ajax-gif').hide(); 
+        }
+   })
+})
 
 
 

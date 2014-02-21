@@ -176,6 +176,30 @@ class CommentController extends \BaseController {
             return Redirect::to('comment/'.$id.'/edit')
                 ->withErrors($pass);
 	}
+        
+        public function more(){
+            
+            $comments = Comment::where('id_user',Auth::user()->id)
+                    ->where('id','<',Input::get('id'))
+                    ->orderBy('created_at','DESC')
+                    ->take(2)->get();
+            
+            $names = array();
+            // Con esto fuerzo a que me carge en $comments todas las relaciones que tienen
+            // los comentarios con los telefonos. Ya que al hacer el $value->phone el ya guarda
+            // la informacion del telefono en cada comentarios correspondiente en $comments
+            foreach($comments as $value){
+                $value->phone;
+            }
+
+            /*return array(
+                'data'=>array(
+                    'comments'=>$comments,
+                )
+            );*/
+            
+            return $comments;
+        }
 
 	/**
 	 * Remove the specified resource from storage.

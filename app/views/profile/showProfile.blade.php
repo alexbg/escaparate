@@ -205,10 +205,10 @@
     <h2>Ultimos 10 comentarios:</h2>
 
     @foreach($comments as $value)
-        {{-- Con $value que ya sno los comentarios pues si quiero los comentarios seria $value->comment
+        <!-- Con $value que ya sno los comentarios pues si quiero los comentarios seria $value->comment
 
-        Es decir, de la tabla comment quiero los comment(comentarios) --}}
-        <div class="panel panel-success">
+        Es decir, de la tabla comment quiero los comment(comentarios) -->
+        <div class="panel panel-success" id={{ $value->id }}>
             <div class="panel-heading">
               {{ HTML::link('phone/'.$value->phone->id,$value->phone->name) }}
               {{ $value->created_at }}
@@ -223,5 +223,7 @@
             </div>
         </div>
     @endforeach
+    
+    {{ HTML::link('#','Ver mas',array('class'=>'btn btn-primary btn-lg btn-block more')) }}
 </div>
 @stop

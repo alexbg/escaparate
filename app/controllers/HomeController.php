@@ -50,7 +50,7 @@ class HomeController extends BaseController {
         public function index(){
             // Obtengo los telefonos ordenados de forma ascendente
             $phones = Phone::orderBy('created_at','ASC')
-                    ->paginate(2);
+                    ->paginate(10);
             // Genero la vista index que es la principal
             $view = View::make('index');
             // Añado una vista shopWindow si hay algun telefono añadido 
@@ -189,7 +189,7 @@ class HomeController extends BaseController {
             // QUIERO ORDENARLOS DE MANERA DESC Y QUE SOLO OBTENGA 10 COMENTARIOS
             $comments = Comment::where('id_user',$user->id)
                     ->orderBy('created_at','DESC')
-                    ->paginate(10);
+                    ->take(2)->get();
             
             // devuelvo la vista con la informacion necesaria
             return View::make('profile/showProfile')
@@ -242,7 +242,7 @@ class HomeController extends BaseController {
             
             // Obtengo todos los telefonos y todas las marcas
             // Esta informacion sera obtenida SOLO cuando no sea una peticion ajax
-            $phones = Phone::OrderAsc()->paginate(1);
+            $phones = Phone::OrderAsc()->paginate(5);
             $brands = Brand::all();
             
             // devuelvo las vistas. Esta vista SOLO sera pasada cuando no sea una peticion ajax

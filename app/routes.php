@@ -54,4 +54,6 @@ Route::any('/changeLanguage','HomeController@changeLanguage');
 
 Route::post('/changeInformation','HomeController@changeInformation');
 
+Route::get('/more','CommentController@more');
+
 //Route::post('phone/store/{id}','PhoneController@store');

@@ -28,6 +28,12 @@ class Brand extends Eloquent {
      */
     protected $table = 'brands';
     
+    protected $fillable = array(
+        'name',
+        
+        
+        );
+    
 }
 
 ?>

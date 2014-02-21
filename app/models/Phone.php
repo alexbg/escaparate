@@ -78,6 +78,7 @@ class Phone extends Eloquent {
         'id_brand',
         'price',
         'description',
+        'discount'
         );
     
 }

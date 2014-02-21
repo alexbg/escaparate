@@ -16,6 +16,9 @@
   z-index: 1;
   text-align: center;
 }
+.thumbnails .span4:nth-child(4n+1) {
+    margin-left: 0;
+}
 /*.affix-bottom {
   width: inherit;
   position: absolute;
