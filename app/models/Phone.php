@@ -10,6 +10,8 @@ class Phone extends Eloquent {
         'so' => 'required',
         'ram' => 'required',
         'camera' => 'required',
+        'price' => 'required',
+        'description' => 'required'
     );
     
     /*public static $rulesUpdate = array(
@@ -73,7 +75,10 @@ class Phone extends Eloquent {
         'cpu',
         'ram',
         'camera',
-        'id_brand');
+        'id_brand',
+        'price',
+        'description',
+        );
     
 }
 

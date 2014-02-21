@@ -4,11 +4,17 @@
         <!-- Cargo los scripts de jquery y boostrap -->
         {{ HTML::script('http://code.jquery.com/jquery-1.10.2.min.js') }}
         {{ HTML::style('assets/css/bootstrap.min.css', array('media' => 'screen')) }}
-        {{ HTML::style('assets/css/mio.css') }}
+        
         {{ HTML::script('assets/js/bootstrap.min.js') }}
         <!--{{ HTML::script('http://code.jquery.com/ui/1.10.4/jquery-ui.js') }}
         
         {{ HTML::style('http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css') }}-->
+        
+        {{ HTML::script('assets/dist/js/standalone/selectize.min.js') }}
+        {{ HTML::style('assets/dist/css/selectize.bootstrap3.css') }}
+        
+        <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
             body { padding-top: 70px; }
@@ -62,8 +68,10 @@
                         {{ Form::open(array('url' => '','role'=> 'search','class'=>'navbar-form navbar-left')) }}
 
                             <div class="form-group">
-                                {{ Form::text('search','',array('class'=>'form-control','placeholder'=>'Buscar')) }}
+                                {{ Form::text('search','',array('class'=>'form-control','placeholder'=>'Buscar', 'id'=>'tags')) }}
+                                <!--{{ Form::select('search',array(),' ',array('class'=>'form-control', 'placeholder'=>'Buscar','id'=>'tags')) }}-->
                             </div>
+                   
 
                         {{ Form::submit('buscar',array('class'=>'btn btn-default')) }}
 
@@ -83,7 +91,7 @@
             </div>
         </div>
         
-        
+                <!-- Este mensaje es para las peticiones ajax -->
                 <div class="alert alert-success ajax affix">
                        <!--<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>-->
                      <div id='message'>{{ Session::get('message') }}</div>
@@ -92,7 +100,7 @@
         <!-- Con session::get manejo los mensajes que se envian para informar al usuario -->
         <div class="container">
             @if(Session::get('message'))
-                <div class="alert alert-success alert-dismissable">
+                <div class="alert alert-info alert-dismissable">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                     {{ Session::get('message') }}
                 </div>
@@ -130,6 +138,7 @@
                 </div>
             </div>  
         </div>
+        {{ HTML::style('assets/css/mio.css') }}
         {{ HTML::script('assets/js/mio.js') }}
     </body>
 </html>

@@ -83,4 +83,29 @@ require app_path().'/filters.php';
 
 /*** MIO ***/
 
+//LANGUAGE
+
+// Comprueba cual es el lenguaje que tiene que tener
 App::setLocale(Session::get('my.locale', Config::get('app.locale')));
+
+//ERROR
+
+// redirige al usuario a la pagina principal si escribe alguna direccion 
+// que no esta en  ningun controller al que este apuntando la url
+App::missing(function($exception)
+{
+    // redirige a la pagina principal con un mensaje
+    return Redirect::to('/')->with('message','Lo sentimos pero pagina no ha sido encontrada');
+});
+
+// Controlla si hay algun error al querer obtener 
+// algun aonformaciond de algun modelo,etc
+// Esa informacion puede no estar por diferentes motivos, 
+// por ejemplo: pasar una id que no existe a un find() y que al querer usar 
+// la 'informacion' que en este casi no esta($user->name por ejemplo) da un error
+// porque no tiene esa informacion. De ese tipo de errores se encarga el App::error
+
+/*App::error(function($exception){
+    // redirige a la pagina principal con un mensaje
+    return Redirect::to('/')->with('message','Lo sentimos la informacion no ha sido encontrada');
+});*/

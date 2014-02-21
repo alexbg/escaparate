@@ -93,6 +93,12 @@
     </div>
     
     <div class="form-group">
+        {{ Form::label('language', 'Idioma') }}
+        {{ Form::select('language',array('en'=>'English','es'=>'Español'),' ',array('class'=>'form-control')) }}
+        <div class='error text-danger' name='language'></div>
+    </div>
+    
+    <div class="form-group">
        {{ Form::label('others', 'Observaciones') }}
        {{ Form::textArea('others','',array('class'=>'form-control')) }}
        <div class='error text-danger' name='others'></div>

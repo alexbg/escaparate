@@ -17,7 +17,12 @@ class Brands extends Migration {
                 
                 $table->increments('id');
                 $table->string('name')->unique();
+                $table->integer('id_user')->unsigned();
                 $table->timestamps();
+                
+                // permite establecer cual va a ser la clave ajena del usuario
+                $table->foreign('id_user')
+                    ->references('id')->on('users');
             });
 	}
 

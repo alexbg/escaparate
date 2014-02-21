@@ -49,6 +49,7 @@ class BrandController extends \BaseController {
             if(!$pass->fails()){
                 $brand = new Brand();
                 $brand->name = Input::get('name');
+                $brand->id_user = Auth::user()->id;
                 if($brand->save()){
                     return Redirect::to('brand')
                             ->with('message','La marca ha sido añadida');

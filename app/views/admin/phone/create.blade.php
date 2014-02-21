@@ -40,6 +40,19 @@
        {{ $errors->first('camera') }}
     </div>
     
+    <div class="form-group">
+       {{ Form::label('price', 'Precio') }}
+       {{ Form::text('price','',array('class'=>'form-control')) }}
+       {{ $errors->first('price') }}
+    </div>
+    
+    <div class="form-group">
+       {{ Form::label('description', 'Descripcion') }}
+       {{ Form::textArea('description','',array('class'=>'form-control')) }}
+       {{ $errors->first('description') }}
+    </div>
+    
+    
        {{ Form::hidden('id_brand',$id,array('class'=>'form-control')) }} 
 
        {{ Form::submit('añadir',array('class'=>'btn btn-default')) }}

@@ -21,6 +21,18 @@ class HomeController extends BaseController {
        public function __construct() {
            
             $this->beforeFilter('csrf',array('on'=>'login'));
+            /**
+             * Todos tienen que estar logueados excepto login,index,register y showPhones
+             */
+            $this->beforeFilter('auth',array(
+                'except'=>array(
+                    'login',
+                    'index',
+                    'register',
+                    'showPhones'
+                    )
+                )
+            );
         
        }
 
@@ -74,9 +86,14 @@ class HomeController extends BaseController {
                 }
                 else{
                     // Si todo ha salido bien y el usuario esta logueado, envia un mensaje al usuario con with('message'
-                    //return Redirect::to('/')->with('message','has sido logueado');
+                    
+                    // pongo el idioma que tiene el usuario
+                    Session::put('my.locale', Auth::user()->language);
+                    // pongo el mensaje de redirigir a la pagina principal
                     $message = 'Redirigiendo a la pagina principal...';
+                    // guaro un mensaje flash diciendo que ha sido logueado
                     Session::flash('message','has sido logueado');
+                    // paso los valores necesarios a la respuesta del ajax
                      return array(
                         'save'=>true,
                         'message'=>$message,
@@ -85,21 +102,6 @@ class HomeController extends BaseController {
                     
                 }
             }
-            
-           
-            /*if(Request::all()){  
-                // Comprueba que los datos sean correctos en la base de datos de User y lo loguea si ha salido correcto
-                // Cuando termina todo, redirecciona al usuario con un mensaje
-                if(!Auth::attempt(array('email'=>Input::get('email'),'password'=>Input::get('password')),true)){
-                    // Si hay algo mal, envia un mensaje al usuario mediante with('message'
-                    return Redirect::to('login')->with('message','El usuario o la contraseña son incorrectos');
-                }
-                else{
-                    // Si todo ha salido bien y el usuario esta logueado, envia un mensaje al usuario con with('message'
-                    return Redirect::to('/')->with('message','has sido logueado');
-                }
-            }*/
-                
             
             // devuelve la primera vez el formulario de login
             return View::make('forms/login'); 
@@ -165,7 +167,8 @@ class HomeController extends BaseController {
         }
         
         /**
-         * Permite desloguear al usuario que esta logueado
+         * Permite desloguear al usuario que esta logueado.
+         * DEBES ESTAR LOGUEADO
          * @return type
          */
         public function logout()
@@ -176,6 +179,7 @@ class HomeController extends BaseController {
         
         /**
          * Muestra la informacion de perfil del usuario logueado
+         * DEBES ESTAR LOGUEADO
          * @return type
          */
         public function profile(){
@@ -199,7 +203,7 @@ class HomeController extends BaseController {
          * Se enviara la id de la marca mediante get y se pasa como parametro a esta funcion.
          * Separo la busqueda de las marcas y de los telefonos para poder generar el menu de la izquierda
          * en la vista showPhones. Envio el id de la marca para poder activar con boostrap la amrca
-         * que ha señalado el usuario en la tabla de la izquierda de showPhones 
+         * que ha señalado el usuario en la tabla de la izquierda de showPhones
          * @param type $idBrand
          * @return type
          */
@@ -347,18 +351,23 @@ class HomeController extends BaseController {
         
         public function changeLanguage(){
             
-            //(Input::get('language'));
+            // guardo en la sesion un valor que sera el lenguaje
             Session::put('my.locale', Input::get('language'));
             
-            return Redirect::to('profile')->with('message','El idioma a sido cambiado');
+            // obtengo el usuario mediante el di almacenado en la sesion
+            $user = User::find(Auth::user()->id);
             
-            /*return array(
-                        'save'=>true,
-                        'message'=>'El idioma a sido cambiado',
-                        'data'=>Input::get('language'),
-                        'type'=>'language'
-                        );*/
+            // cambio el lenguaje en el usuario
+            $user->language = Input::get('language');
             
+            // si los cambios son guardados, se mostrara un mensaje
+            if($user->save()){
+                return Redirect::to('profile')->with('message','El idioma a sido cambiado');
+            }
+            
+            // se redirijira cuando los cambios no son guardados
+            return Redirect::to('profile')->with('message','El idioma no ha sido cambiado');
+               
         }
         
         /**
@@ -431,5 +440,16 @@ class HomeController extends BaseController {
             User::destroy(Auth::user()->id);
             return Redirect::to('/')->with('message','El usuario ha sido borrado');
             
+        }
+        
+        
+        public function search(){
+            
+            $brand = Brand::select('name')->where('name','like','%'.Input::get('words').'%')->get();
+            
+           
+            
+            // retorna algo parecido a esto: [{"name":"Marca1"},{"name":"Marca2"},{"name":"Marca3"}]
+            return $brand;
         }
 }

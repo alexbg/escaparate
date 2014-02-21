@@ -45,6 +45,7 @@ class PhoneController extends \BaseController {
             $pass = Validator::make(Request::all(),Phone::$rules);
             if(!$pass->fails()){
                 $phone = new Phone(Request::all());
+                $phone->id_user = Auth::user()->id;
                 if($phone->save())
                     return Redirect::to('brand')->with('message','Telefono añadido');
             }
@@ -62,9 +63,28 @@ class PhoneController extends \BaseController {
 	public function show($id)
 	{
             $phone = Phone::find($id);
-            //$phone->paginate(0);
-            //$comments = $phone->comment()->orderBy('created_at')->get();
-            return View::make('showPhone')->with('phone',$phone);
+            // si esta autentificado, se le hace un descuento al precio 
+            // y se le muestra un mensaje
+            // en caso contrario, solo se le muestra un mensaje informando de 
+            // las ventajas de estar registrado
+            if(Auth::check()){
+                 $message = "Al estar registrado en la web tienes un 20% de descuento.
+                    Precio original: $phone->price";
+                 // obtengo el 80% del precio y lo redondeo a 2 decimales
+                 // con round()
+                 $phone->price = round((80 * $phone->price)/100);
+                 //$phone->price = round($phone->price/2.65,2);
+            }
+            else{
+                $message = "Puedes tener un 20% de descuento si te registras en la web";
+            }
+            
+            // Guardo el mensaje en la sesion como session flash
+            Session::flash('message',$message);
+            
+            // Genero la vista y le envio la informacion necesaria
+            return View::make('showPhone')
+                    ->with('phone',$phone);
 	}
 
 	/**
@@ -75,7 +95,9 @@ class PhoneController extends \BaseController {
 	 */
 	public function edit($id)
 	{
+            // obtengo el telefono a editar mediante la id que se envia por get
             $phone = Phone::findOrFail($id);
+            // devuelvo la vista para actualizar el telefono
             return View::make('admin/phone/update')->with('phone',$phone);
 	}
 
@@ -87,8 +109,9 @@ class PhoneController extends \BaseController {
 	 */
 	public function update($id)
 	{
+            // Compruebo si ha pasado la validacion
             $pass = Validator::make(Request::all(),Phone::$rules);
-            
+            // si la validacion no falla entonces guardo la informacion
             if(!$pass->fails()){
                 $phone = Phone::findOrFail($id);
                 //$phone->name = $phone->name;
@@ -96,7 +119,9 @@ class PhoneController extends \BaseController {
                 $phone->ram = Input::get('ram');
                 $phone->camera = Input::get('camera');
                 $phone->image = Input::get('image');
-                //$phone->idBrand = $phone->idBrand;
+                $phone->price = Input::get('price');
+                $phone->description = Input::get('description');
+                //Si la informacino se guarda con exito, se redirijira a la vista phone
                 if($phone->save()){
                     return Redirect::to('phone')->with('message','Los datos han sido cambiados');
                 }
@@ -115,7 +140,9 @@ class PhoneController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
+            // Elimina el telefono mediante la id que se le pasa
             Phone::destroy($id);
+            // redirige a la vista phone con un mensaje
             return Redirect::to('phone')->with('message','El telefono ha sido borrado');
 	}
 

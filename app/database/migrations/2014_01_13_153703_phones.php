@@ -18,11 +18,13 @@ class Phones extends Migration {
                 $table->increments('id');
                 $table->string('name')->unique();
                 $table->integer('id_brand')->unsigned();
+                $table->integer('id_user')->unsigned();
                 $table->string('image');
                 $table->string('so');
                 $table->string('cpu');
                 $table->string('ram');
                 $table->string('camera');
+                $table->string('description');
                 $table->double('price');
                 $table->timestamps();
                 
@@ -31,6 +33,11 @@ class Phones extends Migration {
                 $table->foreign('id_brand')
                     ->references('id')->on('brands')
                     ->onDelete('cascade');
+                
+                // Permite establecer cual va a ser la clave 
+                // ajena para almacenar el usuario
+                $table->foreign('id_user')
+                    ->references('id')->on('users');
             });
 	}
 

@@ -11,6 +11,9 @@
 </div>
         
 <div class='col-xs-12 col-sm-8'>
+    <!-- si hay un usuario registrado, el precio sera un 20 porciendo mas barato-->
+    <h1>Precio: {{ $phone->price }} EUR</h1>
+
     <ul class="list-group">
         <li class="list-group-item"><strong>Nombre: </strong>{{ $phone->name }}</li>
         <li class="list-group-item"><strong>SO: </strong>{{ $phone->so }}</li>
@@ -31,7 +34,8 @@
 
     <div class="tab-content">
       <div class="tab-pane active" id="description">
-          Aqui se pondra la descripcion{{ $phone->description }}
+          <h2>Descripcion</h2>
+          {{ $phone->description }}
       </div>
         
       <div class="tab-pane" id="comments">
@@ -74,7 +78,7 @@
               Es decir, de la tabla comment quiero los comment(comentarios) --}}
               <div class="panel panel-primary">
                   <div class="panel-heading">
-                    <strong>User: </strong>{{ $value->user->name }} 
+                    <strong>User: </strong>{{ $value->user->username }} 
                     <strong>Date:</strong> {{ $value->created_at }}
                   </div>
                   <div class="panel-body">

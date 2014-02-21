@@ -9,7 +9,8 @@ class CommentController extends \BaseController {
          */
         public function __construct() {
             
-            $this->beforeFilter('auth');
+            $this->beforeFilter('auth',array('except'=>'store'));
+            $this->beforeFilter('ajaxAuth');
             
         }
     
@@ -82,7 +83,7 @@ class CommentController extends \BaseController {
                         'message'=>'El comentario ha sido guardado',
                         'type'=>'comment',
                         'data'=>array(
-                            'user'=>Auth::user()->name,
+                            'user'=>Auth::user()->username,
                             'created'=>$comment->created_at,
                             'comment'=>$comment->comment
                         )

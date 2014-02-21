@@ -89,3 +89,18 @@ Route::filter('admin', function(){
    if(!Auth::check() || Auth::user()->email != 'admin@gmail.com') 
        return Redirect::to('/')->with('message','No tienes permisos'); 
 });
+
+
+Route::filter('ajaxAuth', function()
+{
+        if (Auth::guest()){ 
+            Session::flash('message','Debes de estar logueado');
+            return array(
+                'save'=>false,
+                'message'=>'Redirigiendo al login',
+                'redirect'=>url('/login')
+            );
+            
+            
+        }
+});

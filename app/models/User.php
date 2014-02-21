@@ -21,7 +21,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
             'day'=>'sometimes|integer|max:31|required',
             'month'=>'sometimes|integer|max:12|required',
             'year'=>'sometimes|integer|digits_between:4,4|required',
-            'date'=>'sometimes'
+            'date'=>'sometimes',
+            'language'=>'sometimes|required'
         );
         
         // MODIFICADO EN CLASE
@@ -33,7 +34,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
             'address',
             'phone',
             'nif',
-            'sex'
+            'sex',
+            'language'
         );
         // HASTA AQUI
         

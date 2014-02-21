@@ -28,6 +28,7 @@ class Users extends Migration {
                 $table->string('city');
                 $table->string('country');
                 $table->string('others');
+                $table->string('language');
                 //HASTA AQUI
                 $table->timestamps();
             });

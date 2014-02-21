@@ -24,6 +24,8 @@ Route::any('/register','HomeController@register');
 
 Route::get('/logout','HomeController@logout');
 
+Route::get('/search','HomeController@search');
+
 Route::resource('brand','BrandController');
 
 Route::resource('phone','PhoneController');

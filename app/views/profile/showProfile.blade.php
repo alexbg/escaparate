@@ -41,6 +41,7 @@
             {{ Auth::user()->city }}
         </span>
     {{ HTML::link('changeInformation','edit',array('class'=>'edit', 'name'=>'city')) }}</br>
+    
 </div>
 
 <!-- Contiene la parte de las acciones que pueden hacer el usuario -->

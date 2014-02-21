@@ -36,6 +36,18 @@
        {{ $errors->first('camera') }}
     </div>
 
+    <div class="form-group">
+       {{ Form::label('price', 'Precio') }}
+       {{ Form::text('price',$phone->price,array('class'=>'form-control')) }}
+       {{ $errors->first('price') }}
+    </div>
+    
+    <div class="form-group">
+       {{ Form::label('description', 'Descripcion') }}
+       {{ Form::textArea('description',$phone->description,array('class'=>'form-control')) }}
+       {{ $errors->first('description') }}
+    </div>
+    
        {{ Form::submit('Actualizar',array('class'=>'btn btn-default')) }}
     {{ Form::close() }}
 @stop

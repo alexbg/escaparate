@@ -96,6 +96,7 @@ $('form').submit(function(event){
             success:function(data){
                 // Si la peticion ha sido enviada y ha recibido respuesta
                 // escondo el gif
+                
                 $('.ajax-gif').hide();
                 // de la informacion que ha sido enviada, compruebo si save es true
                 // o false
@@ -184,7 +185,10 @@ $('form').submit(function(event){
                 }
                 else{
                     // ESTA PARTE ES LA QUE SE PUDE MODIFICAR
-
+                    if(data.redirect){
+                        
+                        window.location.href = data.redirect
+                    }
                     // SI save es false , es que no se ha podido guardar, entonces
                     // muestro los errores pasados en el div cuya clase es error
                     // Los errores tienen que ser un array(diccionario) de clave=>valor
@@ -562,11 +566,73 @@ $( document ).ready(function() {
       // le paso el evento y el elemento que tiene el evento
       edit(event,$(this));
     });
+    
 });
 
 
 
+/*** BUSCADOR ***/
 
+
+    
+    /*$( "#tags" ).autocomplete({
+        source: function( request, response ) {
+            $.ajax({
+                url:'search',
+                type:'GET',
+                dataType: "json",
+                data:{words:request.term},
+                
+                success: function(data) {
+                    //alert(data);
+                    console.log(data);
+                    //response es un callback al que le apsas un parametro
+                    response(data);
+                },
+            });
+        },
+        widget: function(){
+            $(this).css('background-color','red');
+        }
+    })*/
+
+// Tienen que tener esos tres campos creados
+/**
+ *  valueField: 'name',
+    labelField: 'name',
+    searchField: 'name',
+
+    En este caso recibo [{"name":"Marca1"},{"name":"Marca2"},{"name":"Marca3"}]
+    de hay que todos sean name. Mirar la documentacion para mas informacion:
+    https://github.com/brianreavis/selectize.js
+
+ */
+$('#tags').selectize({
+    valueField: 'name',
+    labelField: 'name',
+    searchField: 'name',
+    
+    load: function(query, callback) {
+        $('.ajax-gif').show();
+        if (!query.length) return callback();
+        $.ajax({
+            url: 'search',
+            type: 'GET',
+            dataType: "json",
+            
+            error: function() {
+                $('.ajax-gif').hide();
+                callback();
+            },
+            success: function(data) {
+                console.log(data);
+                // tiene que recibir la informacion en forma diccionario{clave:valor}
+                $('.ajax-gif').hide();
+                callback(data);
+            }
+        });
+    },
+});
 
 
 
