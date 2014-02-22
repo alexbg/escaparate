@@ -92,11 +92,11 @@ App::setLocale(Session::get('my.locale', Config::get('app.locale')));
 
 // redirige al usuario a la pagina principal si escribe alguna direccion 
 // que no esta en  ningun controller al que este apuntando la url
-App::missing(function($exception)
+/*App::missing(function($exception)
 {
     // redirige a la pagina principal con un mensaje
     return Redirect::to('/')->with('message','Lo sentimos pero pagina no ha sido encontrada');
-});
+});*/
 
 // Controlla si hay algun error al querer obtener 
 // algun aonformaciond de algun modelo,etc

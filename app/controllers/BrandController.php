@@ -69,7 +69,7 @@ class BrandController extends \BaseController {
 	 */
 	public function show($id)
 	{
-		//
+            return View::make('showBrand');
 	}
 
 	/**
@@ -109,7 +109,7 @@ class BrandController extends \BaseController {
             return Redirect::to('brand/'.$id.'/edit')
                 ->withErrors($pass);
 	}
-
+        
 	/**
 	 * Elimina la marca enviadda mediante su id pasado como parametro
          * Hace una eliminacion en cascada tal y como esta configurado en la

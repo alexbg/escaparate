@@ -5,7 +5,7 @@
         <!-- Cargo los scripts de jquery y boostrap -->
         {{ HTML::script('http://code.jquery.com/jquery-1.10.2.min.js') }}
         {{ HTML::style('assets/css/bootstrap.min.css', array('media' => 'screen')) }}
-        
+        {{ HTML::style('assets/css/mio.css') }}
         {{ HTML::script('assets/js/bootstrap.min.js') }}
         <!--{{ HTML::script('http://code.jquery.com/ui/1.10.4/jquery-ui.js') }}
         
@@ -24,7 +24,7 @@
    
     <body>
         <!-- Inicio la creaccion del menu con las clases bo boostrap -->
-        <div class ='menu navbar navbar-default navbar-fixed-top navbar-inverse' role='navigation'>
+        <div class ='menu navbar navbar-default navbar-fixed-top navbar-inverse hidden-print' role='navigation'>
             <div class='container'>
                 <!-- Link que ira a la pagina principal -->
                 <div class="navbar-header">
@@ -66,7 +66,7 @@
                             @endif  
                         </ul>
                         <!-- Inicio formulario de buscada de productos -->
-                        {{ Form::open(array('url' => '','role'=> 'search','class'=>'navbar-form navbar-left')) }}
+                        {{ Form::open(array('url' => 'search','role'=> 'search','class'=>'navbar-form navbar-left', 'method'=>'GET', 'data-stop')) }}
 
                             <div class="form-group">
                                 {{ Form::text('search','',array('class'=>'form-control','placeholder'=>trans('menu.search'), 'id'=>'tags')) }}
@@ -74,7 +74,7 @@
                             </div>
                    
 
-                        {{ Form::submit(trans('menu.search'),array('class'=>'btn btn-default')) }}
+                            {{ Form::submit(trans('menu.search'),array('class'=>'btn btn-default')) }}
 
                         {{ Form::close() }}
                         <!-- se mostrara el link de logout cuando el usuario esta logueado -->
@@ -93,7 +93,7 @@
         </div>
         
                 <!-- Este mensaje es para las peticiones ajax -->
-                <div class="alert alert-success ajax affix">
+                <div class="alert alert-success ajax affix hidden-print">
                        <!--<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>-->
                      <div id='message'>{{ Session::get('message') }}</div>
                 </div>
@@ -117,7 +117,7 @@
                 </div>
             </div>
             
-            <div class='row'>
+            <div class='row hidden-print'>
                 @if(Session::get('message'))
                     <div class="alert alert-info alert-dismissable">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -138,21 +138,16 @@
                 
             </div>
             <!-- Aqui se mostrara la publicidad -->
-            <div class='row'>
-                <div class='col-xs-12 col-sm-12 col-md-12'>
-                    <div class='col-xs-4 col-sm-4 col-md-4'>
-                        Informacion
-                    </div>
-                    <div class='col-xs-4 col-sm-4 col-md-4'>
-                        Informacion
-                    </div>
-                    <div class='col-xs-4 col-sm-4 col-md-4'>
-                        Informacion
-                    </div>
+            <div class='row hidden-print'>
+                <div class='col-sm-12 col-md-12 hidden-xs text-center'>
+                   <img src="http://placehold.it/768x50">
+                </div>
+                <div class='col-xs-12 visible-xs text-center'>
+                   <img src="http://placehold.it/250x50">
                 </div>
             </div>  
         </div>
-        {{ HTML::style('assets/css/mio.css') }}
+        
         {{ HTML::script('assets/js/mio.js') }}
     </body>
 </html>

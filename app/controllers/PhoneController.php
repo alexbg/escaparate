@@ -89,7 +89,7 @@ class PhoneController extends \BaseController {
                 );
             }
             
-            // Guardo el mensaje en la sesion como session flash
+            // Guardo el mensaje de descuento en la sesion como session flash
             Session::flash('message',$message);
             
             // Genero la vista y le envio la informacion necesaria

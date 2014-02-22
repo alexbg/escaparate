@@ -447,9 +447,43 @@ class HomeController extends BaseController {
         
         public function search(){
             
-            $brand = Brand::select('name')->where('name','like','%'.Input::get('words').'%')->get();
+            if(Request::ajax()){
+                $brand = Brand::select('name')->where('name','like','%'.Input::get('words').'%')->get();
+                
+                $phone = Phone::select('name')->where('name','like','%'.Input::get('words').'%')->get();
+                
+                $names = array();
+                
+                foreach($brand as $value){
+                    $names[] = array('name'=>$value->name);
+                }
+                
+                foreach($phone as $value){
+                    $names[] = array('name'=>$value->name);
+                }
+                
+                //$names[] = $brand;
+                
+                // retorna algo parecido a esto: [{"name":"Marca1"},{"name":"Marca2"},{"name":"Marca3"}]
+                return $names;
+            
+            }
+            else{
+                $view;
+                
+                $brand = Brand::where('name','=',Input::get('search'))->first();
+               
+                $phone = Phone::where('name','=',Input::get('search'))->first();
+               
 
-            // retorna algo parecido a esto: [{"name":"Marca1"},{"name":"Marca2"},{"name":"Marca3"}]
-            return $brand;
+                if(count($brand) != 0){
+                   $view = Redirect::to('brand/'.$brand->id)->with('brand',$brand);
+                }
+                else{
+                   $view = Redirect::to('phone/'.$phone->id)->with('phone',$phone);
+                }
+                
+                return $view;
+            } 
         }
 }

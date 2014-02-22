@@ -44,6 +44,8 @@ Route::get('/profile','HomeController@profile');
 
 Route::get('/showPhones/{idBrand?}','HomeController@showPhones');
 
+//Route::get('/showBrand/{idBrand?}','BrandController@showBrand');
+
 Route::any('/changePassword','HomeController@changePassword');
 
 Route::any('/changeEmail','HomeController@changeEmail');

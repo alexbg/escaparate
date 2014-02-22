@@ -19,6 +19,30 @@
 .thumbnails .span4:nth-child(4n+1) {
     margin-left: 0;
 }
+
+/*img{
+  width: auto;
+  max-width: 150px;
+  height: 150px;
+  max-height: 150px;
+}*/
+
+/* Permite que las imagenes tengan un tamaño determinado sobreescribirendo
+el css de bootstrap con el thumbnail*/
+.altura > img, .altura a>img {
+    display: block;
+    height: 150px;
+    max-width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+/*Añade una propiedad mas al input del selectize, para que 
+se vea con un tamaño minimo el input*/
+.selectize-input > input{
+    min-width: 150px;
+}
+
 /*.affix-bottom {
   width: inherit;
   position: absolute;
