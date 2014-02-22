@@ -73,7 +73,7 @@ class HomeController extends BaseController {
             if(Request::ajax()){
                 
                 //return View::make('ajax/menu/login');
-                $message = 'El usuario o la contraseña son incorrectos';
+                $message = trans('message.login.wrong');
                 // Comprueba que los datos sean correctos en la base de datos de User y lo loguea si ha salido correcto
                 // Cuando termina todo, redirecciona al usuario con un mensaje
                 if(!Auth::attempt(array('email'=>Input::get('email'),'password'=>Input::get('password')),true)){
@@ -90,9 +90,9 @@ class HomeController extends BaseController {
                     // pongo el idioma que tiene el usuario
                     Session::put('my.locale', Auth::user()->language);
                     // pongo el mensaje de redirigir a la pagina principal
-                    $message = 'Redirigiendo a la pagina principal...';
+                    $message = trans('message.login.well');
                     // guaro un mensaje flash diciendo que ha sido logueado
-                    Session::flash('message','has sido logueado');
+                    Session::flash('message',trans('message.login.logged'));
                     // paso los valores necesarios a la respuesta del ajax
                      return array(
                         'save'=>true,
@@ -117,12 +117,10 @@ class HomeController extends BaseController {
             
             if(Request::ajax()){
                 // Si hay una peticion en el request comprobara los datos de la peticion
-                $message;
+                $message = trans('message.error');
                 
                 // Comprueba que los datos son validos con el Validatos::make
                 // pasandole los datos de request::all con las reglas generadas en el modelo de User
-                
-               
                 
                 $pass = Validator::make(Request::all(),User::$rules);
                 // Si ha fallado la validacion, lo redirecciona al formulario con los errores
@@ -134,9 +132,9 @@ class HomeController extends BaseController {
                     $user->password = Hash::make(Input::get('password'));
                     if($user->save()){
                         // informo al usuario de que esta siendo redirigido al login
-                        $message = 'Usuario guardado. Redirigiendo al login...';
+                        $message = trans('message.register.saved');
                         // mostrare el mensaje de que ha sido logueado
-                        Session::flash('message','Usuario registrado, ya puede loguearse');
+                        Session::flash('message',trans('message.register.registered'));
                         // devuelvo la informacion necesaria al ajax que esta esperando
                         return array(
                             'save'=>true,
@@ -145,12 +143,12 @@ class HomeController extends BaseController {
                         );
                     }
                     else{
-                        $message = 'Ahora no puede registrarse, intentelo mas tarde';
+                        $message = trans('message.errorToSave');
                     }
                 }
                 // Si todo sale bien, inserta el usuario en la base de datos
                 // y lo redirige al formulario de login con un mensaje
-                $message = 'Los datos introducidos no son validos';
+                $message = trans('message.register.wrong');
                 return array(
                         'save'=>false,
                         'message'=>$message,
@@ -174,7 +172,7 @@ class HomeController extends BaseController {
         public function logout()
         {
             Auth::logout();
-            return Redirect::to('/')->with('message','Has sido deslogueado');
+            return Redirect::to('/')->with('message',trans('message.logout'));
         }
         
         /**
@@ -254,7 +252,7 @@ class HomeController extends BaseController {
         
         public function changePassword(){
             
-                $message = 'Hay algun error';
+                $message = trans('message.error');
             
                 if(Request::ajax()){
                     
@@ -270,19 +268,19 @@ class HomeController extends BaseController {
 
                             if($user->save()){
 
-                               return array('save'=>true,'message'=>'La contraseña a sido cambiada');
+                               return array('save'=>true,'message'=>trans('message.changePassword.saved'));
                             }
                             else
                             {
-                                $message = 'La password no puede ser modificada';
+                                $message = trans('message.errorToSave');
                             }
                         }
                         else{
-                            $message = 'Tu antiguo password no es correcto';
+                            $message = trans('message.changePassword.oldPassword');
                         } 
                     }
                     else{
-                        $message = 'Alguno de los datos es incorrecto';
+                        $message = trans('message.changePassword.wrong');
                     }
                     
                     return array(
@@ -299,7 +297,7 @@ class HomeController extends BaseController {
         
         public function changeEmail(){
             
-            $message = 'Hay algun error';
+            $message = trans('message.error');
             
             if(Request::ajax()){
                 
@@ -325,17 +323,17 @@ class HomeController extends BaseController {
                          */
                         return array(
                             'save'=>true,
-                            'message'=>'El email ha sido cambiado',
+                            'message'=>trans('message.changeEmail.saved'),
                             'type'=>'email',
                             'data'=>Input::get('email')
                         );
                     }
                     else{
-                        $message = 'El Correo elecronico no puede ser modificado';
+                        $message = trans('message.errorToSave');
                     }
                 }
                 else{
-                    $message = 'Alguno de los datos es incorrecto';
+                    $message = trans('message.changeEmail.wrong');
                 }
                 
                 return array(
@@ -362,11 +360,11 @@ class HomeController extends BaseController {
             
             // si los cambios son guardados, se mostrara un mensaje
             if($user->save()){
-                return Redirect::to('profile')->with('message','El idioma a sido cambiado');
+                return Redirect::to('profile')->with('message',trans('message.changeLanguage.saved'));
             }
             
             // se redirijira cuando los cambios no son guardados
-            return Redirect::to('profile')->with('message','El idioma no ha sido cambiado');
+            return Redirect::to('profile')->with('message',trans('message.errorToSave'));
                
         }
         
@@ -380,7 +378,7 @@ class HomeController extends BaseController {
             $user = User::find(Auth::user()->id);
             
             // Escribe el primer mensaje que puede ser enviado en respuesta al ajax
-            $message = 'La informacion no es correcta';
+            $message = trans('message.changeInformation.wrong');
             
             // pasa la validacion
             $pass = Validator::make(Request::all(),User::$rules);
@@ -416,13 +414,17 @@ class HomeController extends BaseController {
                         $user->city = Input::get('city');
                         $send = $user->city;
                         break;
+                    case 'nif':
+                        $user->nif = Input::get('nif');
+                        $send = $user->nif;
+                        break;
                 }
                 
                 // si consigue guardar, enviara la informacion con el mensaje
                 if($user->save()){
                      return array(
                         'save'=>true,
-                        'message'=>'Se ha modificado la informacion',
+                        'message'=>trans('message.changeInformation.saved'),
                         'data'=>$send,
                     );
                 } 
@@ -438,7 +440,7 @@ class HomeController extends BaseController {
         public function deleteUser(){
             
             User::destroy(Auth::user()->id);
-            return Redirect::to('/')->with('message','El usuario ha sido borrado');
+            return Redirect::to('/')->with('message',trans('message.deleteUser.deleted'));
             
         }
         
@@ -446,9 +448,7 @@ class HomeController extends BaseController {
         public function search(){
             
             $brand = Brand::select('name')->where('name','like','%'.Input::get('words').'%')->get();
-            
-           
-            
+
             // retorna algo parecido a esto: [{"name":"Marca1"},{"name":"Marca2"},{"name":"Marca3"}]
             return $brand;
         }

@@ -1,7 +1,16 @@
 <?php
 return array(
     
-    'changePassword'=>'Formulario cambiar contraseña',
+    'price'=>'Precio',
+    'email'=>'Correo electronico',
+    'language'=>'Idioma',
+    'dateOfBirth'=>'Fecha de nacimiento',
+    'phone'=>'Telefono',
+    'address'=>'Direccion',
+    'url'=>'Url',
+    'city'=>'Ciudad',
+    'nif'=>'Dni',
+    'information'=>'Información'
     
 )
 ?>

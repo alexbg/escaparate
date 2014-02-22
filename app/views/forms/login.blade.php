@@ -1,6 +1,7 @@
 @extends('index')
 
 @section('content')
+<div class='col-xs-11 col-sm-8 col-md-8'>
     <h1>Formulario Login</h1>
     {{ Form::open(array('url' => 'login','role'=> 'form',)) }}
     
@@ -18,6 +19,6 @@
             {{ Form::token() }}
             {{ Form::submit('Login',array('class'=>'btn btn-default')) }}
 
-    
     {{ Form::close() }}
+    </div>
 @stop

@@ -5,6 +5,8 @@ return array(
     'phones' => 'phones',
     'search' => 'search',
     'logout' => 'logout',
+    'login' => 'login',
+    'register'=>'register',
 )
 
 ?>

@@ -37,8 +37,8 @@ class Phones extends Migration {
                 
                 // Permite establecer cual va a ser la clave 
                 // ajena para almacenar el usuario
-                $table->foreign('id_user')
-                    ->references('id')->on('users');
+                /*$table->foreign('id_user')
+                    ->references('id')->on('users');*/
             });
 	}
 

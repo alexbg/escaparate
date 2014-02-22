@@ -1,6 +1,7 @@
 @extends('index')
 
 @section('content')
+<div class='col-xs-11 col-sm-8 col-md-8'>
     <h1>Formulario registro</h1>
     {{ Form::open(array('url' => 'register','role'=> 'form')) }}
     <!-- -->
@@ -112,4 +113,5 @@
  
     </div>
     {{ Form::close() }}
+</div>
 @stop

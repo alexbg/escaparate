@@ -68,15 +68,25 @@ class PhoneController extends \BaseController {
             // en caso contrario, solo se le muestra un mensaje informando de 
             // las ventajas de estar registrado
             if(Auth::check()){
-                 $message = "Al estar registrado en la web tienes un $phone->discount% de descuento.
-                    Precio original: $phone->price";
-                 // obtengo el 80% del precio y lo redondeo a 2 decimales
-                 // con round()
-                 $phone->price = round(((100-$phone->discount) * $phone->price)/100);
-                 //$phone->price = round($phone->price/2.65,2);
+                $message = trans('message.discount.logged',
+                        array(
+                            'discount'=>$phone->discount,
+                            'price'=>$phone->price
+                        )
+                );
+                // obtengo el 80% del precio y lo redondeo a 2 decimales
+                // con round()
+                $phone->price = round(((100-$phone->discount) * $phone->price)/100);
+                //$phone->price = round($phone->price/2.65,2);
             }
             else{
-                $message = "Puedes tener un $phone->discount% de descuento si te registras en la web";
+                
+                $message = trans('message.discount.noLogged',
+                        array(
+                            'discount'=>$phone->discount,
+                            'price'=>$phone->price
+                        )
+                );
             }
             
             // Guardo el mensaje en la sesion como session flash

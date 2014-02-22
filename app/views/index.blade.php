@@ -14,8 +14,8 @@
         {{ HTML::script('assets/dist/js/standalone/selectize.min.js') }}
         {{ HTML::style('assets/dist/css/selectize.bootstrap3.css') }}
         
-        <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         
         <style>
             body { padding-top: 70px; }
@@ -49,12 +49,12 @@
                             se muestra un menu diferente a cuando no lo esta-->
                             @if(!Auth::check())
                             <!-- Menu no logueado -->
-                            <li>{{ HTML::link('login','Login') }}</li>
-                            <li>{{ HTML::link('register','Registrate') }}</li>
-                            <li>{{ HTML::link('showPhones','Moviles', array('class'=>'menu-link')) }}</li>
+                            <li>{{ HTML::link('login',trans('menu.login')) }}</li>
+                            <li>{{ HTML::link('register',trans('menu.register')) }}</li>
+                            <li>{{ HTML::link('showPhones',trans('menu.phones'), array('class'=>'menu-link')) }}</li>
                             @else
                             <!-- Menu logueado -->
-                            <li>{{ HTML::link('profile','Perfil') }}</li>
+                            <li>{{ HTML::link('profile',trans('menu.profile')) }}</li>
                                 {{-- BUSCAR OTRA FORMA DE COMPROBAR SER ADMIN --}}
                                 {{-- ROUTE::FILER NO VALE --}}
                                 <!-- Cuando el usuaro es un usuario administrador se muestran dos opciones mas -->
@@ -62,19 +62,19 @@
                                     <li>{{ HTML::link('brand','Crear Marcas') }}</li>
                                     <li>{{ HTML::link('phone','Ver Moviles') }}</li> 
                                 @endif
-                            <li>{{ HTML::link('showPhones','Moviles') }}</li>
+                            <li>{{ HTML::link('showPhones',trans('menu.phones')) }}</li>
                             @endif  
                         </ul>
                         <!-- Inicio formulario de buscada de productos -->
                         {{ Form::open(array('url' => '','role'=> 'search','class'=>'navbar-form navbar-left')) }}
 
                             <div class="form-group">
-                                {{ Form::text('search','',array('class'=>'form-control','placeholder'=>'Buscar', 'id'=>'tags')) }}
+                                {{ Form::text('search','',array('class'=>'form-control','placeholder'=>trans('menu.search'), 'id'=>'tags')) }}
                                 <!--{{ Form::select('search',array(),' ',array('class'=>'form-control', 'placeholder'=>'Buscar','id'=>'tags')) }}-->
                             </div>
                    
 
-                        {{ Form::submit('buscar',array('class'=>'btn btn-default')) }}
+                        {{ Form::submit(trans('menu.search'),array('class'=>'btn btn-default')) }}
 
                         {{ Form::close() }}
                         <!-- se mostrara el link de logout cuando el usuario esta logueado -->
@@ -100,27 +100,40 @@
        
         <!-- Con session::get manejo los mensajes que se envian para informar al usuario -->
         <div class="container">
-            @if(Session::get('message'))
-                <div class="alert alert-info alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    {{ Session::get('message') }}
-                </div>
+            <!-- mostrara la ruta en laque estas. es un Breadcrumbs -->
+            <div class='row'>
+                <div class='col-xs-12'>
+                    <?php 
+                       $url = explode('/',Request::url());
+                       echo '<ol class="breadcrumb">';
 
-            @endif
+                       for($i = 3; $i<count($url);$i++){
+
+                           echo "<li>$url[$i]</li>";
+
+                       }
+                       echo '</ol>'
+                    ?>    
+                </div>
+            </div>
+            
+            <div class='row'>
+                @if(Session::get('message'))
+                    <div class="alert alert-info alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        {{ Session::get('message') }}
+                    </div>
+
+                @endif
+            </div>
         <!-- Este es el mensaje que modifico con javascript --> 
         
  
         <!-- Esta es la parte dinamica de la web -->
             <div class='row'>
-                
-                    
-                    <!--@if(isset($table))
-                        {{ $table }}
-                    @endif
-                    
-                    @yield('phones')-->
-                    
-                    @yield('content')
+               
+
+                @yield('content')
                     
                 
             </div>

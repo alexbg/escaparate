@@ -27,5 +27,11 @@ return array(
             'body'=>'If you delete your account all your data will be removed except your comments'
         )
     ),
+    'comment'=>array(
+        'title'=>'Form to add more comments',
+        'button'=>'Send',
+        'comment'=>'Comment',
+        'addComment'=>'Write new comment',
+    )
 );
 ?>

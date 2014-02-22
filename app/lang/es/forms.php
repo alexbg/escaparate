@@ -27,5 +27,11 @@ return array(
             'body'=>'Si elimina su cuenta, todos sus datos seran borradso excepto sus comentarios'
         )
     ),
+    'comment'=>array(
+        'title'=>'Formulario añadir mas comentarios',
+        'button'=>'Enviar',
+        'comment'=>'Comentario',
+        'addComment'=>'Escribe un nuevo comentario',
+    )
 );
 ?>

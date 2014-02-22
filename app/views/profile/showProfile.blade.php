@@ -7,40 +7,46 @@
 
 <!-- Muestro informacion sobre el usuario como: email, idioma, etc -->
 <div class='col-xs-12 col-sm-6 col-md-6'>
-    <h1>Perfil de {{ $user->username }}</h1>
-    <h2>Datos:</h2>
-    <strong>Correo Electronico: </strong><span id='email'>{{ Auth::user()->email }}</span></br>
-    <strong>Idioma: </strong><span id='language'>{{ Config::get('app.locale') }}</span></br>
+    <h1>{{ trans('titles.profile')}}</h1>
+    <h2>{{ trans('global.information') }}: </h2>
+    <strong>{{ trans('global.email') }}: </strong><span id='email'>{{ Auth::user()->email }}</span></br>
+    <strong>{{ trans('global.language') }}: </strong><span id='language'>{{ Config::get('app.locale') }}</span></br>
     
-    <strong>Fecha de nacimiento: </strong>
+    <strong>{{ trans('global.dateOfBirth') }}: </strong>
         <span id='date' class='edit-span'>
             {{ Auth::user()->date }}
         </span>
-        {{ HTML::link('changeInformation','edit',array('class'=>'edit','name'=>'date')) }}</br>
+        {{ HTML::link('changeInformation',trans('buttons.edit'),array('class'=>'edit','name'=>'date')) }}</br>
         
-    <strong>Telefono: </strong>
+    <strong>{{ trans('global.phone') }}: </strong>
     <span id='phone' class='edit-span'>
         {{ Auth::user()->phone_number }}
     </span>
-    {{ HTML::link('changeInformation','edit',array('class'=>'edit', 'name'=>'phone')) }}</br>
+    {{ HTML::link('changeInformation',trans('buttons.edit'),array('class'=>'edit', 'name'=>'phone')) }}</br>
     
-    <strong>Direccion: </strong>
+    <strong>{{ trans('global.address') }}: </strong>
         <span id='address' class='edit-span'>
             {{ Auth::user()->address }}
         </span>
-    {{ HTML::link('changeInformation','edit',array('class'=>'edit', 'name'=>'address')) }}</br>
+    {{ HTML::link('changeInformation',trans('buttons.edit'),array('class'=>'edit', 'name'=>'address')) }}</br>
     
-    <strong>Url: </strong>
+    <strong>{{ trans('global.url') }}: </strong>
         <span id='url' class='edit-span'>
             {{ Auth::user()->url }}
         </span>
-    {{ HTML::link('changeInformation','edit',array('class'=>'edit', 'name'=>'url')) }}</br>
+    {{ HTML::link('changeInformation',trans('buttons.edit'),array('class'=>'edit', 'name'=>'url')) }}</br>
     
-    <strong>City: </strong>
+    <strong>{{ trans('global.city') }}: </strong>
         <span id='city' class='edit-span'>
             {{ Auth::user()->city }}
         </span>
-    {{ HTML::link('changeInformation','edit',array('class'=>'edit', 'name'=>'city')) }}</br>
+    {{ HTML::link('changeInformation',trans('buttons.edit'),array('class'=>'edit', 'name'=>'city')) }}</br>
+    
+    <strong>{{ trans('global.nif') }}: </strong>
+        <span id='nif' class='edit-span'>
+            {{ Auth::user()->nif }}
+        </span>
+    {{ HTML::link('changeInformation',trans('buttons.edit'),array('class'=>'edit', 'name'=>'nif')) }}</br>
     
 </div>
 
@@ -130,12 +136,12 @@
             </h4>
           </div>
           <!-- Cambiar el deleteddd por delete y comrpobar que pasa con el modal que siempre elimina al usuario -->
-          <div id="deleteddd" class="panel-collapse collapse">
+          <div id="delete" class="panel-collapse collapse">
             <div class="panel-body">
                 
                 <p class='text-warning'>{{ trans('forms.delete.warning') }}</p>
                 {{ HTML::link(
-                    'deleteUser',
+                    '#',
                     trans('forms.delete.button'),
                     array(
                         'class'=>'btn btn-danger',
@@ -192,8 +198,8 @@
             {{ trans('forms.delete.modal.body') }}
           </div>
           <div class="modal-footer">
-            {{ HTML::link('#',trans('forms.delete.button'),array('class'=>'btn btn-danger')) }}
-            {{ HTML::link('#','Salir',array('class'=>'btn btn-info')) }}
+            {{ HTML::link('deleteUser',trans('forms.delete.button'),array('class'=>'btn btn-danger')) }}
+            {{ HTML::link('#',trans('buttons.exit'),array('class'=>'btn btn-info','data-dismiss'=>'modal')) }}
           </div>
         </div>
       </div>
@@ -202,7 +208,7 @@
 
 <!-- Parte donde se muestran los comentarios -->
 <div class='col-xs-12 col-sm-12 col-md-12'>
-    <h2>Ultimos 10 comentarios:</h2>
+    <h2>{{ trans('titles.theLastComments') }}</h2>
 
     @foreach($comments as $value)
         <!-- Con $value que ya sno los comentarios pues si quiero los comentarios seria $value->comment
@@ -219,11 +225,11 @@
                 </span> 
             </div>
             <div class="panel-footer">
-                {{ HTML::link('comment/'.$value->id."/edit",'Editar',array('class'=>'edit', 'name'=>'comment')) }}
+                {{ HTML::link('comment/'.$value->id."/edit",trans('buttons.edit'),array('class'=>'edit', 'name'=>'comment')) }}
             </div>
         </div>
     @endforeach
     
-    {{ HTML::link('#','Ver mas',array('class'=>'btn btn-primary btn-lg btn-block more')) }}
+    {{ HTML::link('#',trans('buttons.moreComments'),array('class'=>'btn btn-primary btn-lg btn-block more')) }}
 </div>
 @stop

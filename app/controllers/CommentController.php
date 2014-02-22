@@ -45,27 +45,9 @@ class CommentController extends \BaseController {
 	 */
 	public function store($id)
 	{
-            // Compruebo que la informacion es correcta, si todo esta bien
-            //almaceno la informacion en la base de datos e informo al usuario
-            // Validator::make(Request::all(),Comment::$rules); POR SI SOLO SIEMPRE DEVUELVE TRUE
-            // PASE O NO PASE LA VALIDACION
-            /*$pass = Validator::make(Request::all(),Comment::$rules);
-            if(!$pass->fails()){
-                $comment = new Comment(Request::all());
-                
-                $comment->id_phone = $id;
-                $comment->id_user = Auth::user()->id;
-                
-                if($comment->save()){
-                     return Redirect::to('phone/'.$id)->with('message','El comentario ha sido añadido');
-                }
-                
-            }
             
-            return Redirect::to('comment/create/'.$id)
-                            ->with('message','El comentario no puede estar vacio');*/
             // Inicio el mensaje de error
-            $message = 'Hay algun error';
+            $message = trans('message.error');
             
             // compruebo si el comentario es valido con la validacion
             $pass = Validator::make(Request::all(),Comment::$rules);
@@ -80,7 +62,7 @@ class CommentController extends \BaseController {
                      //return Redirect::to('phone/'.$id)->with('message','El comentario ha sido añadido');
                     return array(
                         'save'=>true,
-                        'message'=>'El comentario ha sido guardado',
+                        'message'=>trans('message.comments.saved'),
                         'type'=>'comment',
                         'data'=>array(
                             'user'=>Auth::user()->username,
@@ -90,12 +72,12 @@ class CommentController extends \BaseController {
                     );
                 }
                 else{
-                    $message = 'No se puede guardar en el servidor, intentelo mas tarde';
+                    $message = trans('message.errorToSave');
                 }
                 
             }
             else{
-                $message = 'La informacion enviada no es valida';
+                $message = trans('message.comments.wrong');
             }
             
             return array(
@@ -132,7 +114,7 @@ class CommentController extends \BaseController {
             /*$comment = Comment::find($id);
             return View::make('comments/update')->with('comment',$comment);*/
             
-            $message = 'Hay algun dato erroneo';
+            $message = trans('message.error');
             $validar = array('comment'=>Input::get('value'));
             $pass = Validator::make(Request::all(),Comment::$rules);
             if(!$pass->fails()){
@@ -141,7 +123,7 @@ class CommentController extends \BaseController {
                 if($comment->save()){
                     return array(
                         'save'=>true,
-                        'message'=>'El comentario ha sido editado',
+                        'message'=>trans('message.comments.updated'),
                         'data'=>$comment->comment,   
                     );
                 }
@@ -168,7 +150,7 @@ class CommentController extends \BaseController {
                 $comment = Comment::findOrFail($id);
                 $comment->comment = Input::get('comment');
                 if($comment->save()){
-                    return Redirect::to('profile')->with('message','El comentario ha sido cambiado');
+                    return Redirect::to('profile')->with('message',trans('message.comments.updated'));
                 }
             }
             
@@ -179,26 +161,25 @@ class CommentController extends \BaseController {
         
         public function more(){
             
-            $comments = Comment::where('id_user',Auth::user()->id)
-                    ->where('id','<',Input::get('id'))
-                    ->orderBy('created_at','DESC')
-                    ->take(2)->get();
+            if(Input::get('id')){
+                
             
-            $names = array();
-            // Con esto fuerzo a que me carge en $comments todas las relaciones que tienen
-            // los comentarios con los telefonos. Ya que al hacer el $value->phone el ya guarda
-            // la informacion del telefono en cada comentarios correspondiente en $comments
-            foreach($comments as $value){
-                $value->phone;
-            }
+                $comments = Comment::where('id_user',Auth::user()->id)
+                        ->where('id','<',Input::get('id'))
+                        ->orderBy('created_at','DESC')
+                        ->take(2)->get();
 
-            /*return array(
-                'data'=>array(
-                    'comments'=>$comments,
-                )
-            );*/
-            
-            return $comments;
+                $names = array();
+                // Con esto fuerzo a que me carge en $comments todas las relaciones que tienen
+                // los comentarios con los telefonos. Ya que al hacer el $value->phone el ya guarda
+                // la informacion del telefono en cada comentarios correspondiente en $comments
+                foreach($comments as $value){
+                    $value->phone;
+                }
+                
+                // devuelvo la informacion a la peticion ajax
+                return $comments;
+            }
         }
 
 	/**

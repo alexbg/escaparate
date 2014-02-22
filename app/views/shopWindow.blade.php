@@ -1,7 +1,7 @@
 @section('content')
 
 <div class='col-xs-12 col-sm-12 col-md-12'>
-    <h2>Los ultimos moviles</h2>    
+    <h2>{{ trans('titles.theLastPhones') }}</h2>    
 </div>
 
 <?php $contador=0; ?>
@@ -21,7 +21,7 @@
                         <div class='caption'>
 
                             <h3>{{ HTML::link('/phone/'.$value->id,$value->name) }}</h3>
-                          <p>Descripcion</p>
+                          <p>{{ $value->description }}</p>
 
                         </div>
                     </div>
@@ -38,7 +38,7 @@
                         <div class='caption'>
 
                             <h3>{{ HTML::link('/phone/'.$value->id,$value->name) }}</h3>
-                          <p>Descripcion</p>
+                          <p>{{ $value->description }}</p>
 
                         </div>
                     </div>
