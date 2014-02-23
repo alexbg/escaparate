@@ -103,8 +103,8 @@ class PhoneTableSeeder extends Seeder {
             'ram' => '6',
             'camera' => '5',
             'description' => 'Esto es la descripcion',
-            'price' => '60',
-            'discount' => 20
+            'price' => '60.89',
+            'discount' => 3
             )
         );
         
@@ -134,7 +134,22 @@ class PhoneTableSeeder extends Seeder {
             'camera' => '5',
             'description' => 'Esto es la descripcion',
             'price' => '60',
-            'discount' => 20
+            'discount' => 15
+            )
+        );
+        
+        Phone::create(array(
+            'name' => 'Movil 4 marca 1',
+            'id_brand' => '1',
+            'id_user' => '1',
+            'image' => 'http://i-cdn.phonearena.com/images/articles/97074-image/Lenovo-Vibe-Z-K910.jpg',
+            'so' => 'android',
+            'cpu' => 'cualquiera',
+            'ram' => '6',
+            'camera' => '5',
+            'description' => 'Esto es la descripcion',
+            'price' => '60',
+            'discount' => 5
             )
         );
         
@@ -150,7 +165,7 @@ class PhoneTableSeeder extends Seeder {
             'camera' => '5',
             'description' => 'Esto es la descripcion',
             'price' => '60',
-            'discount' => 20
+            'discount' => 40
             )
         );
         
@@ -180,7 +195,84 @@ class PhoneTableSeeder extends Seeder {
             'camera' => '5',
             'description' => 'Esto es la descripcion',
             'price' => '60',
-            'discount' => 20,
+            'discount' => 10,
+            )
+        );
+        
+        Phone::create(array(
+            'name' => 'Movil 4 marca 2',
+            'id_brand' => '2',
+            'id_user' => '1',
+            'image' => 'http://i-cdn.phonearena.com/images/articles/97074-image/Lenovo-Vibe-Z-K910.jpg',
+            'so' => 'android',
+            'cpu' => 'cualquiera',
+            'ram' => '6',
+            'camera' => '5',
+            'description' => 'Esto es la descripcion',
+            'price' => '60',
+            'discount' => 60,
+            )
+        );
+        
+        //MARCA 3
+        
+        Phone::create(array(
+            'name' => 'Movil marca 3',
+            'id_brand' => '3',
+            'id_user' => '1',
+            'image' => 'http://www.blogcdn.com/www.engadget.com/media/2012/12/oppo-find-5-vs.jpg',
+            'so' => 'android',
+            'cpu' => 'cualquiera',
+            'ram' => '6',
+            'camera' => '5',
+            'description' => 'Esto es la descripcion',
+            'price' => '60',
+            'discount' => 30
+            )
+        );
+        
+        Phone::create(array(
+            'name' => 'Movil 2 marca 3',
+            'id_brand' => '3',
+            'id_user' => '1',
+            'image' => 'http://www.geek.com/wp-content/uploads/2012/12/Oppo-Find-51.jpg',
+            'so' => 'android',
+            'cpu' => 'cualquiera',
+            'ram' => '6',
+            'camera' => '5',
+            'description' => 'Esto es la descripcion',
+            'price' => '60',
+            'discount' => 18
+            )
+        );
+        
+        Phone::create(array(
+            'name' => 'Movil 3 marca 3',
+            'id_brand' => '3',
+            'id_user' => '1',
+            'image' => 'http://en.oppo.com/assets/media/products/find5/affection.jpg',
+            'so' => 'android',
+            'cpu' => 'cualquiera',
+            'ram' => '6',
+            'camera' => '5',
+            'description' => 'Esto es la descripcion',
+            'price' => '60',
+            'discount' => 20
+            )
+        );
+        
+        Phone::create(array(
+            'name' => 'Movil 4 marca 3',
+            'id_brand' => '3',
+            'id_user' => '1',
+            'image' => 'http://meizumxon.com/news/user/files/1a.jpg',
+            'so' => 'android',
+            'cpu' => 'cualquiera',
+            'ram' => '6',
+            'camera' => '5',
+            'description' => 'Esto es la descripcion',
+            'price' => '60',
+            'discount' => 50
             )
         );
     }

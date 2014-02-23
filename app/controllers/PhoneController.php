@@ -76,7 +76,7 @@ class PhoneController extends \BaseController {
                 );
                 // obtengo el 80% del precio y lo redondeo a 2 decimales
                 // con round()
-                $phone->price = round(((100-$phone->discount) * $phone->price)/100);
+                $phone->price = round(((100-$phone->discount) * $phone->price)/100,2);
                 //$phone->price = round($phone->price/2.65,2);
             }
             else{
@@ -130,6 +130,7 @@ class PhoneController extends \BaseController {
                 $phone->camera = Input::get('camera');
                 $phone->image = Input::get('image');
                 $phone->price = Input::get('price');
+                $phone->discount = Input::get('discount');
                 $phone->description = Input::get('description');
                 //Si la informacino se guarda con exito, se redirijira a la vista phone
                 if($phone->save()){

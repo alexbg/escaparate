@@ -66,7 +66,7 @@
                             @endif  
                         </ul>
                         <!-- Inicio formulario de buscada de productos -->
-                        {{ Form::open(array('url' => 'search','role'=> 'search','class'=>'navbar-form navbar-left', 'method'=>'GET', 'data-stop')) }}
+                        {{ Form::open(array('url' => 'search','role'=> 'search','class'=>'navbar-form navbar-left search', 'method'=>'GET', 'data-stop')) }}
 
                             <div class="form-group">
                                 {{ Form::text('search','',array('class'=>'form-control','placeholder'=>trans('menu.search'), 'id'=>'tags')) }}
@@ -93,7 +93,7 @@
         </div>
         
                 <!-- Este mensaje es para las peticiones ajax -->
-                <div class="alert alert-success ajax affix hidden-print">
+                <div class="alert alert-success ajax affix">
                        <!--<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>-->
                      <div id='message'>{{ Session::get('message') }}</div>
                 </div>
@@ -117,7 +117,7 @@
                 </div>
             </div>
             
-            <div class='row hidden-print'>
+            <div class='row'>
                 @if(Session::get('message'))
                     <div class="alert alert-info alert-dismissable">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -138,7 +138,7 @@
                 
             </div>
             <!-- Aqui se mostrara la publicidad -->
-            <div class='row hidden-print'>
+            <div class='row'>
                 <div class='col-sm-12 col-md-12 hidden-xs text-center'>
                    <img src="http://placehold.it/768x50">
                 </div>

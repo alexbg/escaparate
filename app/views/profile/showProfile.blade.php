@@ -231,5 +231,7 @@
     @endforeach
     
     {{ HTML::link('#',trans('buttons.moreComments'),array('class'=>'btn btn-primary btn-lg btn-block more')) }}
+    
 </div>
+
 @stop

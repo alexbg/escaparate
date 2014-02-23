@@ -18,11 +18,11 @@
 
 Route::get('/','HomeController@index');
 
-Route::any('/login','HomeController@login');
+Route::any('/login','UserController@login');
 
-Route::any('/register','HomeController@register');
+Route::any('/register','UserController@register');
 
-Route::get('/logout','HomeController@logout');
+Route::get('/logout','UserController@logout');
 
 Route::get('/search','HomeController@search');
 
@@ -40,22 +40,24 @@ Route::post('comment/{id}/edit','CommentController@edit');
 
 Route::get('phone/create/{id}','PhoneController@create');
 
-Route::get('/profile','HomeController@profile');
+Route::get('/profile','UserController@profile');
 
 Route::get('/showPhones/{idBrand?}','HomeController@showPhones');
 
 //Route::get('/showBrand/{idBrand?}','BrandController@showBrand');
 
-Route::any('/changePassword','HomeController@changePassword');
+Route::any('/changePassword','UserController@changePassword');
 
-Route::any('/changeEmail','HomeController@changeEmail');
+Route::any('/changeEmail','UserController@changeEmail');
 
-Route::get('/deleteUser','HomeController@deleteUser');
+Route::get('/deleteUser','UserController@deleteUser');
 
-Route::any('/changeLanguage','HomeController@changeLanguage');
+Route::any('/changeLanguage','UserController@changeLanguage');
 
-Route::post('/changeInformation','HomeController@changeInformation');
+Route::post('/changeInformation','UserController@changeInformation');
 
 Route::get('/more','CommentController@more');
+
+Route::get('/showPhonesByBrand/{id}','HomeController@showPhonesByBrand');
 
 //Route::post('phone/store/{id}','PhoneController@store');

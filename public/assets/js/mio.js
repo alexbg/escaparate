@@ -10,6 +10,8 @@ var value = [];
 // alamcena el valor optenido en el data.data del ajax del edit input
 var temp = null;
 
+
+
 //***SHOWPHONES***
 
 // Maneja el menu de categorias en showPhones. 
@@ -86,6 +88,13 @@ $('form').submit(function(event){
         event.preventDefault();
         // serializo la informacion de los formularios, pasandolos aun json de clave valor
         var element = $(this).serializeArray();
+        
+        // VALIDACION DEL CLIENTE
+        
+        /*if(!validation(element)){
+            element.push(false);
+        }*/
+        
         // Muestro el gif para indicar que la peticion va a empezar
         $('.ajax-gif').show();
         // ejecuto la peticion mediante ajax
@@ -216,6 +225,85 @@ $('form').submit(function(event){
         })
     } 
 });
+
+
+/**VALIDACION**/
+
+function validation(element){
+    
+    var validated = true;
+    
+    Object.keys(element).forEach(function(key){
+        
+        switch(element[key]['name']){
+            case 'phone':
+                if(element[key]['value']){
+                    var patt = new RegExp('^[9|6|7][0-9]{8}$');
+                    validated = patt.test(element[key]['value']);
+                }
+                    break;
+            case 'nif':
+                if(element[key]['value']){
+                    //var patt = new RegExp('(([X-Z]{1})([-]?)(\d{7})([-]?)([A-Z]{1}))|((\d{8})([-]?)([A-Z]{1}))');
+                    //validated = patt.test(element[key]['value']);
+                }
+                break;
+            case 'day':
+                if(element[key]['value']){
+                    if(element[key]['value']<=31){
+                        validated = true;
+                    }
+                    else{
+                        validated = false;
+                    }
+                }
+                break;
+                
+            case 'month':
+                if(element[key]['value']){
+                    
+                    if(element[key]['value']<=12){
+                        validated = true;
+                    }
+                    else{
+                        validated = false;
+                    }
+                    
+                }
+                break;
+                
+            case 'year':
+                if(element[key]['value']){
+                    
+                    if(element[key]['value']<=2014){
+                        validated = true;
+                    }
+                    else{
+                        validated = false;
+                    }
+                }
+                break;
+                
+                
+            case 'email':
+                if(element[key]['value']){
+                    var patt = new RegExp('[-0-9a-zA-Z.+_]+@[-0-9a-zA-Z.+_]+\.[a-zA-Z]{2,4}');
+                    validated = patt.test(element[key]['value']);
+                }
+                break;
+                
+            case 'password':
+                if(element[key]['value']){
+                    var patt = new RegExp('[a-z,0-9,A-Z]{6}');
+                    validated = patt.test(element[key]['value']);
+                }
+                break;          
+        }
+        
+    });
+    
+    return validated;
+}
 
 
 /*** AJAX MENU ***/
@@ -611,12 +699,13 @@ $('#tags').selectize({
     valueField: 'name',
     labelField: 'name',
     searchField: 'name',
+    maxItems:'1',
     
     load: function(query, callback) {
         $('.ajax-gif').show();
         if (!query.length) return callback();
         $.ajax({
-            url: 'search',
+            url: $('.search').attr('action'),
             type: 'GET',
             dataType: "json",
             
@@ -638,22 +727,6 @@ $('#tags').selectize({
         });
     },
 });
-
-
-/*** MISMO TAMAÑO ***/
-
-
-function equalHeight(group) {
-   tallest = 0;
-   group.each(function() {
-      thisHeight = $(this).height();
-      if(thisHeight > tallest) {
-         tallest = thisHeight;
-         console.log(tallest)
-      }
-   });
-   group.height(tallest);
-}
 
 
 /*** MORE ***/
@@ -959,7 +1032,4 @@ $('.more').click(function(){
 //})
 
 
-/** Validara los datos editatos con EDIT INPUT **/
-function validate(){
-    
-}
+

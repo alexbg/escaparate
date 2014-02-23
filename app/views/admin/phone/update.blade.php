@@ -43,6 +43,12 @@
     </div>
     
     <div class="form-group">
+       {{ Form::label('discount', 'Descuento') }}
+       {{ Form::text('discount',$phone->discount,array('class'=>'form-control')) }}
+       {{ $errors->first('discount') }}
+    </div>
+    
+    <div class="form-group">
        {{ Form::label('description', 'Descripcion') }}
        {{ Form::textArea('description',$phone->description,array('class'=>'form-control')) }}
        {{ $errors->first('description') }}
