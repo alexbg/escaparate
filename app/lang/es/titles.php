@@ -1,9 +1,9 @@
 <?php
 
 return array(
-    'theLastPhones' => 'The last Phones',
-    'profile' => 'Your profile',
-    'theLastComments' => 'Last comments'
+    'theLastPhones' => 'Los ultimos telefonos',
+    'profile' => 'Su perfil',
+    'theLastComments' => 'Los ultimos comentarios'
 )
 
 ?>

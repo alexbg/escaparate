@@ -42,7 +42,7 @@ return array(
         'deleted'=>'The user have been deleted',
     ),
     'comments'=>array(
-        'saved'=>'The cooment have been saved',
+        'saved'=>'The comment have been saved',
         'wrong'=>'Some data are wrong',
         'updated'=>'The comment is changed',
     ),

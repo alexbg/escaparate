@@ -360,6 +360,7 @@ class UserController extends BaseController {
         public function deleteUser(){
             
             User::destroy(Auth::user()->id);
+            
             return Redirect::to('/')->with('message',trans('message.deleteUser.deleted'));
             
         }

@@ -24,8 +24,9 @@ class Comments extends Migration {
                 // Permite establecer cual va a ser la clave ajena
                 // y que quieres que los elimine en cascada
                 $table->foreign('id_user')
-                    ->references('id')->on('users');
-                    //->onDelete('cascade');
+                    ->references('id')->on('users')
+                    ->onDelete('cascade');
+                
                 $table->foreign('id_phone')
                     ->references('id')->on('phones');
             });

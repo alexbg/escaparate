@@ -9,11 +9,9 @@
 <div class='col-xs-12 col-sm-4'>
     {{ HTML::image($phone->image,'imagen Telefono',array('class'=>'img-thumbnail')) }}
 </div>
+
         
 <div class='col-xs-12 col-sm-8'>
-    <!-- si hay un usuario registrado, el precio sera un 20 porciendo mas barato-->
-    <h1>{{ trans('global.price')}}: {{ $phone->price }} EUR</h1>
-
     <ul class="list-group">
         <li class="list-group-item"><strong>Nombre: </strong>{{ $phone->name }}</li>
         <li class="list-group-item"><strong>SO: </strong>{{ $phone->so }}</li>
@@ -21,6 +19,9 @@
         <li class="list-group-item"><strong>RAM: </strong>{{ $phone->ram }}</li>
         <li class="list-group-item"><strong>Camera: </strong>{{ $phone->camera }}</li>
     </ul>
+    
+    <!-- si hay un usuario registrado, el precio sera un 20 porciendo mas barato-->
+    <h1>{{ trans('global.price')}}: {{ $phone->price }} EUR</h1>
 </div>
         
 <div class='col-xs-12 col-sm-12 col-md-12'>

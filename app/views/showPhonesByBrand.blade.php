@@ -3,10 +3,10 @@
 @section('content')
 <h1>{{ $phones[0]->brand->name }}</h1>
 
-<div class='col-xs-12 col-sm-9 col-md-9'>
+<div class='col-xs-12 col-sm-12 col-md-12'>
     <div id="phones">
         @foreach($phones as $value)
-            <div class='col-sm-6 col-md-4 hidden-xs'>
+            <div class='col-sm-3 col-md-3 hidden-xs'>
                 <div class="thumbnail altura text-center">
                     <div class='caption'>
                         <h3>{{ HTML::link('/phone/'.$value->id,$value->name) }}</h3>

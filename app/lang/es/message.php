@@ -14,41 +14,42 @@ return array(
         
     ),
     'discount'=>array(
-        'logged'=>'You are logged so here is your discount of :discount% for you. Official price: :price',
-        'noLogged'=>'You are not logged, if you want to get a :discount% of discount, you have to be logged',
+        
+        'logged'=>'Por tener una cuenta, te ofrecemos un descuento del :discount%. Precio Oficial: :price',
+        'noLogged'=>'Para tener un  :discount% de decuento, tienes que tener una cuenta.',
         
     ),
     'changePassword'=>array(
-        'saved'=>'The password is changed',
-        'oldPassword'=>'Your old password is wrong',
-        'wrong'=>'Some data are wrong',
+        'saved'=>'La contraseña se ha cambiado',
+        'oldPassword'=>'El password antiguo esta mal',
+        'wrong'=>'Alguno de los datos son incorrectos',
         
     ),
     'changeEmail'=>array(
-        'saved'=>'The email is changed',
-        'wrong'=>'Some data are wrong',
+        'saved'=>'El email ha cambiado',
+        'wrong'=>'Alguno de los datos son incorrectos',
         
     ),
     'changeLanguage'=>array(
-        'saved'=>'The language is changed',
+        'saved'=>'EL idioma se ha cambiado',
         
     ),
     'changeInformation'=>array(
-        'saved'=>'The informacion are changed',
-        'wrong'=>'Some data are wrong',
+        'saved'=>'La informacion se ha cambiado',
+        'wrong'=>'Alguno de los datos son incorrectos',
         
     ),
     'deleteUser'=>array(
-        'deleted'=>'The user have been deleted',
+        'deleted'=>'El usuario ha sido eliminado',
     ),
     'comments'=>array(
-        'saved'=>'The cooment have been saved',
-        'wrong'=>'Some data are wrong',
-        'updated'=>'The comment is changed',
+        'saved'=>'El comentario se ha guardado',
+        'wrong'=>'Alguno de los datos son incorrectos',
+        'updated'=>'El comentario se ha cambiado',
     ),
-    'logout'=>'You have been logout',
-    'error'=>'We have some problems, try it later',
-    'errorToSave'=>'The data could not be saved, try it later',
+    'logout'=>'Has salido de tu sesion',
+    'error'=>'Tenemos algunos problemas, intentelo mas tarde',
+    'errorToSave'=>'La informacion no se puede guardar, intentelo mas tarde',
     
 )
 

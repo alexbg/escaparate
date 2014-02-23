@@ -52,6 +52,14 @@ class UserTableSeeder extends Seeder {
             'date' => '12/12/1990',
             'language' => 'es')
         );
+        
+        User::create(array(
+            'email' => 'prueba2@gmail.com',
+            'username' => 'prueba2',
+            'password' => $password,
+            'date' => '12/12/1990',
+            'language' => 'es')
+        );
     }
 
 }
@@ -79,7 +87,13 @@ class brandTableSeeder extends Seeder {
             'name' => 'Marca3',
             'id_user' => '1',
             )
-        );   
+        );
+        
+        Brand::create(array(
+            'name' => 'Marca4',
+            'id_user' => '1',
+            )
+        );  
     }
 }
 
@@ -275,5 +289,68 @@ class PhoneTableSeeder extends Seeder {
             'discount' => 50
             )
         );
+        
+        //MARCA4
+        
+        Phone::create(array(
+            'name' => 'Movil 1 marca 4',
+            'id_brand' => '4',
+            'id_user' => '1',
+            'image' => 'http://www.gizmochina.com/wp-content/uploads/2012/12/Neo-N003-01.jpg',
+            'so' => 'android',
+            'cpu' => 'cualquiera',
+            'ram' => '6',
+            'camera' => '5',
+            'description' => 'Esto es la descripcion',
+            'price' => '60',
+            'discount' => 16
+            )
+        );
+        
+        Phone::create(array(
+            'name' => 'Movil 2 marca 4',
+            'id_brand' => '4',
+            'id_user' => '1',
+            'image' => 'http://i00.i.aliimg.com/wsphoto/v0/804999120/Preorder-NEO-N003-MTK6589-Quad-Core-Smart-Phone-5-0-Inch-HD-1920x1080P-IPS-Screen-Android.jpg',
+            'so' => 'android',
+            'cpu' => 'cualquiera',
+            'ram' => '6',
+            'camera' => '5',
+            'description' => 'Esto es la descripcion',
+            'price' => '60',
+            'discount' => 30
+            )
+        );
+        
+        Phone::create(array(
+            'name' => 'Movil 3 marca 4',
+            'id_brand' => '4',
+            'id_user' => '1',
+            'image' => 'http://www.sinamovil.com/wp-content/uploads/2013/06/neo-n003-004-895x565.jpeg',
+            'so' => 'android',
+            'cpu' => 'cualquiera',
+            'ram' => '6',
+            'camera' => '5',
+            'description' => 'Esto es la descripcion',
+            'price' => '60',
+            'discount' => 70
+            )
+        );
+        
+        Phone::create(array(
+            'name' => 'Movil 4 marca 4',
+            'id_brand' => '4',
+            'id_user' => '1',
+            'image' => 'http://i1-news.softpedia-static.com/images/news2/Neo-N003-Confirmed-as-the-Cheapest-5-Inch-1080P-Smartphone-2.jpg?1362748325',
+            'so' => 'android',
+            'cpu' => 'cualquiera',
+            'ram' => '6',
+            'camera' => '5',
+            'description' => 'Esto es la descripcion',
+            'price' => '60',
+            'discount' => 70
+            )
+        );
+        
     }
 }
